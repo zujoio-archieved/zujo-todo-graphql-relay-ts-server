@@ -1,0 +1,5 @@
+const GraphQLUserMutations = {}
+
+export {
+    GraphQLUserMutations
+}

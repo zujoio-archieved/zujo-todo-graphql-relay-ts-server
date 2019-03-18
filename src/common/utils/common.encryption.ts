@@ -1,0 +1,26 @@
+import * as bcrypt from "bcrypt";
+
+class Encryption {
+
+    /**
+     * Generate hash of payload
+     * @param payload
+     * @returns Hash of payload
+     */
+    public static async encrypt(payload: String){
+        return bcrypt.hashSync(payload, 10);
+    }
+
+    /**
+     * Compare plain string with Hash
+     * @param plain plain string needs to compare with hashsed
+     * @param hashed hashed string version of plain string
+     * @returns Returns 
+     */
+    public static async compareHash(plain: String, hashed: string){
+        return bcrypt.compareSync(plain, hashed);
+    }
+
+}
+
+export { Encryption } 
