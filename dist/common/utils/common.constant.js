@@ -26,4 +26,6 @@ const TODO_SUBSCRIPTION_TRIGGERS = {
     rename_todo: "RENAME_TODO"
 };
 exports.TODO_SUBSCRIPTION_TRIGGERS = TODO_SUBSCRIPTION_TRIGGERS;
+const CURSOR_PREFIX = 'arrayconnection:';
+exports.CURSOR_PREFIX = CURSOR_PREFIX;
 //# sourceMappingURL=common.constant.js.map

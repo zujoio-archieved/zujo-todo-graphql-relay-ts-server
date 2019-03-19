@@ -12,6 +12,8 @@ import {
 import { nodeInterface } from "../global.defination";
 import { TodosConnection } from "../todo/todo.typedef";
 import { TodoRepository } from "../../repository/todo/index"
+import { mongooseConnectionFromArray } from "../../common/utils/common.graphql"
+import { ToDo } from "../../schemas/todo/index";
 
 
 const GraphQLUser = new GraphQLObjectType({
@@ -32,9 +34,9 @@ const GraphQLUser = new GraphQLObjectType({
             },
             resolve: async (obj, { status, ...args }) =>{
                 const todoRepo = new TodoRepository()
-                const todos = await todoRepo.getTodos(status)
-                return connectionFromArray(todos, args)
-            }
+                const todos = await todoRepo.getTodos(status, args)
+                return await mongooseConnectionFromArray(ToDo, todos, args)
+            } 
         },
         numTodos: {
           type: GraphQLInt,

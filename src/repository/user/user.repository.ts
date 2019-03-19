@@ -166,7 +166,7 @@ class UserRepository implements IRepository{
      * @todo get by login user id
      */
     async me(){
-        let user = await User.findOne({ _id: "5c8f75aee599af0235063997" })
+        let user = await User.findOne({ _id: "5c8f8945e8174414327fcbec" })
         if(!user){
             throw new Error("User not found!")
         }
