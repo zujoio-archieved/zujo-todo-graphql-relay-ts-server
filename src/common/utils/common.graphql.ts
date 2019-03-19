@@ -36,18 +36,8 @@ const hasPage = async (query: any, type: string, cursor: string, args: any) =>{
     if(after){
         where["_id"] = { $gt: fromBase64(after) }
     }
-    console.log("where", where)
     const count = await query.count(where);
-    console.log("count", count)
-
-    let pageCount = count
-    if(first){
-        pageCount = count - first
-    }
-    if(last){
-        pageCount = count - last
-    }
-    return pageCount > 0
+    return count > 0
 }
 
 /**

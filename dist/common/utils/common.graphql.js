@@ -43,17 +43,8 @@ const hasPage = (query, type, cursor, args) => __awaiter(this, void 0, void 0, f
     if (after) {
         where["_id"] = { $gt: common_encoding_1.fromBase64(after) };
     }
-    console.log("where", where);
     const count = yield query.count(where);
-    console.log("count", count);
-    let pageCount = count;
-    if (first) {
-        pageCount = count - first;
-    }
-    if (last) {
-        pageCount = count - last;
-    }
-    return pageCount > 0;
+    return count > 0;
 });
 /**
  * Return connection of mongoose model

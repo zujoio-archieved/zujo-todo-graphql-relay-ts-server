@@ -33,7 +33,6 @@ const GraphQLUser = new GraphQLObjectType({
                 ...connectionArgs
             },
             resolve: async (obj, { status, ...args }) =>{
-                console.log("args", args)
                 const todoRepo = new TodoRepository()
                 const todos = await todoRepo.getTodos(status, args)
                 return await mongooseConnectionFromArray(ToDo, todos, args)

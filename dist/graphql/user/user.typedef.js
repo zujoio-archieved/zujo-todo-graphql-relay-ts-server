@@ -39,7 +39,6 @@ const GraphQLUser = new graphql_1.GraphQLObjectType({
                 } }, graphql_relay_1.connectionArgs),
             resolve: (obj, _a) => __awaiter(this, void 0, void 0, function* () {
                 var { status } = _a, args = __rest(_a, ["status"]);
-                console.log("args", args);
                 const todoRepo = new index_1.TodoRepository();
                 const todos = yield todoRepo.getTodos(status, args);
                 return yield common_graphql_1.mongooseConnectionFromArray(index_2.ToDo, todos, args);
