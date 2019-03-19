@@ -13,6 +13,7 @@ import { UserRepository } from '../../repository/user';
 import { GraphQLTodo } from './todo.typedef';
 import { GraphQLTodoEdge } from './todo.typedef';
 import { TodoRepository } from '../../repository/todo';
+import { objectIdToCursor } from '../../common/utils/common.graphql'
 
 import pubSub from '../publisher'
 import { TODO_SUBSCRIPTION_TRIGGERS } from '../../common/utils/common.constant'
@@ -41,18 +42,13 @@ const GraphQlAddTodoMutation = mutationWithClientMutationId({
         // Create todo
         const todoRepo = new TodoRepository()
         const createdTodo = await todoRepo.addTodo(text);
-        const todos = await todoRepo.getTodos('any')
-
-        // Find matching index
-        const index = lodash.findIndex(todos, function(todo) { 
-          return todo._id.toHexString() == createdTodo._id.toHexString(); 
-        });
+    
 
         // Generate cursor
-        const cursor = offsetToCursor(index)
+        const cursor = objectIdToCursor(createdTodo["_id"].toHexString())
         const todoEdge = {
           cursor: cursor,
-          node: todos[index]
+          node: createdTodo
         }
         const nodeEdge = {
           todoEdge: todoEdge,
@@ -100,7 +96,6 @@ const GraphQLChangeTodoStatusMutation = mutationWithClientMutationId({
       pubSub.publish(TODO_SUBSCRIPTION_TRIGGERS.change_todo_status,{
         todoChangedStatus: todo
       });
-
 
       return { todo };
     },

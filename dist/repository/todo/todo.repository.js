@@ -12,20 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
-const index_1 = require("../../schemas/todo/index");
 const mongoose_1 = __importDefault(require("mongoose"));
+const index_1 = require("../../schemas/todo/index");
+const common_mongoose_1 = require("../../common/utils/common.mongoose");
 class TodoRepository {
     /**
      * Fetch todo(s)
      * @param status filter by status
+     * @param args Pagination arguments
      */
-    getTodos(status) {
+    getTodos(status, args) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};
             if (status === 'completed') {
                 where["complete"] = true;
             }
-            const todos = yield index_1.ToDo.find(where);
+            const todos = yield common_mongoose_1.getPaginatedRecords(index_1.ToDo, where, args);
             return todos;
         });
     }

@@ -1,21 +1,24 @@
 import lodash from "lodash"
-
-import { IRepository } from "../interface/repository.interface"
-import { ToDo } from "../../schemas/todo/index"
 import mongoose from 'mongoose'
+
+import { ToDo } from "../../schemas/todo/index"
+import { getPaginatedRecords } from '../../common/utils/common.mongoose'
 
 export class TodoRepository{
 
     /**
      * Fetch todo(s)
      * @param status filter by status
+     * @param args Pagination arguments
      */
-    public async getTodos(status: string){
+    public async getTodos(status: string, args: any){
         let where = {}
+
         if(status === 'completed'){
             where["complete"] = true
         }
-        const todos = await ToDo.find(where)
+
+        const todos = await getPaginatedRecords(ToDo, where, args)
         return todos
     }
 

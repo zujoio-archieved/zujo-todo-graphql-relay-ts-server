@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_relay_1 = require("graphql-relay");
 const graphql_1 = require("graphql");
-const lodash_1 = __importDefault(require("lodash"));
 const user_1 = require("../user");
 const user_2 = require("../../repository/user");
 const todo_typedef_1 = require("./todo.typedef");
 const todo_typedef_2 = require("./todo.typedef");
 const todo_1 = require("../../repository/todo");
+const common_graphql_1 = require("../../common/utils/common.graphql");
 const publisher_1 = __importDefault(require("../publisher"));
 const common_constant_1 = require("../../common/utils/common.constant");
 const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
@@ -45,16 +45,11 @@ const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
         // Create todo
         const todoRepo = new todo_1.TodoRepository();
         const createdTodo = yield todoRepo.addTodo(text);
-        const todos = yield todoRepo.getTodos('any');
-        // Find matching index
-        const index = lodash_1.default.findIndex(todos, function (todo) {
-            return todo._id.toHexString() == createdTodo._id.toHexString();
-        });
         // Generate cursor
-        const cursor = graphql_relay_1.offsetToCursor(index);
+        const cursor = common_graphql_1.objectIdToCursor(createdTodo["_id"].toHexString());
         const todoEdge = {
             cursor: cursor,
-            node: todos[index]
+            node: createdTodo
         };
         const nodeEdge = {
             todoEdge: todoEdge,

@@ -22,6 +22,8 @@ const graphql_relay_1 = require("graphql-relay");
 const global_defination_1 = require("../global.defination");
 const todo_typedef_1 = require("../todo/todo.typedef");
 const index_1 = require("../../repository/todo/index");
+const common_graphql_1 = require("../../common/utils/common.graphql");
+const index_2 = require("../../schemas/todo/index");
 const GraphQLUser = new graphql_1.GraphQLObjectType({
     name: 'User',
     fields: () => ({
@@ -37,9 +39,10 @@ const GraphQLUser = new graphql_1.GraphQLObjectType({
                 } }, graphql_relay_1.connectionArgs),
             resolve: (obj, _a) => __awaiter(this, void 0, void 0, function* () {
                 var { status } = _a, args = __rest(_a, ["status"]);
+                console.log("args", args);
                 const todoRepo = new index_1.TodoRepository();
-                const todos = yield todoRepo.getTodos(status);
-                return graphql_relay_1.connectionFromArray(todos, args);
+                const todos = yield todoRepo.getTodos(status, args);
+                return yield common_graphql_1.mongooseConnectionFromArray(index_2.ToDo, todos, args);
             })
         },
         numTodos: {
