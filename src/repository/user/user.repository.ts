@@ -1,14 +1,14 @@
 import lodash from "lodash"
 
-import { IRepository } from "../interface/repository.interface"
 import { UserValidation } from "./user.validation"
 import { Encryption } from "../../common/utils/common.encryption"
 import { JWT } from "../../common/utils/common.jwt"
 import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
+import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
 
-class UserRepository implements IRepository{
+class UserRepository{
     constructor(){}
 
     /**
@@ -47,15 +47,15 @@ class UserRepository implements IRepository{
     }
 
     /**
-     * Create User
+     * Register User
      * @param userPayload User input payload
      * @returns Object contains new created user and authentication token
      */
-    async create(userPayload:any){
+    async register(userPayload:any){
         // Validate unique parameters
         const isEmailAlreadyExists =await UserValidation.emailAlreadyExists(userPayload.email)
         if(isEmailAlreadyExists){
-            throw new Error("User with same email address already exists!")
+            throw new EmailAlreadyExists()
         }
 
         // Encrypt password
@@ -65,6 +65,7 @@ class UserRepository implements IRepository{
         const user = new User({
             email: userPayload.email,
             password: hashedPassword,
+            /*
             profile:{
                 name: userPayload.profile.name,
                 gender: userPayload.profile.gender,
@@ -72,6 +73,7 @@ class UserRepository implements IRepository{
                 website: userPayload.profile.website,
                 picture: userPayload.profile.picture,
             }
+            */
         })
 
         // Generate and assign token to created user
@@ -85,7 +87,7 @@ class UserRepository implements IRepository{
         // Save User
         const savedUser = await user.save();
         return {
-            accessToken: AuthToken,
+            authToken: AuthToken,
             user: savedUser.toJSON()
         }
     }

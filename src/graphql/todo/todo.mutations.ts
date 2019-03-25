@@ -1,12 +1,9 @@
 import {
     mutationWithClientMutationId,
     fromGlobalId,
-    toGlobalId,
-    cursorForObjectInConnection,
-    offsetToCursor
+    toGlobalId
 } from 'graphql-relay'
 import { GraphQLNonNull, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
-import lodash from 'lodash'
 
 import { GraphQLUser } from '../user';
 import { UserRepository } from '../../repository/user';

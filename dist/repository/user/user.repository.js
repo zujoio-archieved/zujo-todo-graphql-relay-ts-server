@@ -18,6 +18,7 @@ const common_jwt_1 = require("../../common/utils/common.jwt");
 const user_1 = require("../../schemas/user");
 const common_constant_1 = require("../../common/utils/common.constant");
 const utils_1 = require("../../schemas/utils");
+const common_exceptions_1 = require("../../common/utils/common.exceptions");
 class UserRepository {
     constructor() { }
     /**
@@ -55,16 +56,16 @@ class UserRepository {
         });
     }
     /**
-     * Create User
+     * Register User
      * @param userPayload User input payload
      * @returns Object contains new created user and authentication token
      */
-    create(userPayload) {
+    register(userPayload) {
         return __awaiter(this, void 0, void 0, function* () {
             // Validate unique parameters
             const isEmailAlreadyExists = yield user_validation_1.UserValidation.emailAlreadyExists(userPayload.email);
             if (isEmailAlreadyExists) {
-                throw new Error("User with same email address already exists!");
+                throw new common_exceptions_1.EmailAlreadyExists();
             }
             // Encrypt password
             const hashedPassword = yield common_encryption_1.Encryption.encrypt(userPayload.password);
@@ -72,13 +73,6 @@ class UserRepository {
             const user = new user_1.User({
                 email: userPayload.email,
                 password: hashedPassword,
-                profile: {
-                    name: userPayload.profile.name,
-                    gender: userPayload.profile.gender,
-                    location: userPayload.profile.location,
-                    website: userPayload.profile.website,
-                    picture: userPayload.profile.picture,
-                }
             });
             // Generate and assign token to created user
             const token = yield common_jwt_1.JWT.generateToken(user._id.toHexString());
@@ -90,7 +84,7 @@ class UserRepository {
             // Save User
             const savedUser = yield user.save();
             return {
-                accessToken: AuthToken,
+                authToken: AuthToken,
                 user: savedUser.toJSON()
             };
         });
