@@ -46,7 +46,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "retry": "^0.12.0",
-    "subscriptions-transport-ws": "^0.9.15",
+    "subscriptions-transport-ws": "^0.9.16",
     "winston": "^3.2.1"
   },
   "repository": {
