@@ -1,12 +1,9 @@
 import {
     mutationWithClientMutationId,
     fromGlobalId,
-    toGlobalId,
-    cursorForObjectInConnection,
-    offsetToCursor
+    toGlobalId
 } from 'graphql-relay'
 import { GraphQLNonNull, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
-import lodash from 'lodash'
 
 import { GraphQLUser } from '../user';
 import { UserRepository } from '../../repository/user';
@@ -26,9 +23,9 @@ const GraphQlAddTodoMutation = mutationWithClientMutationId({
     outputFields: {
         viewer:{
             type: GraphQLUser,
-            resolve: async () => {
+            resolve: async (obj, args, context, info) => {
                 const userRepo = new UserRepository()
-                return await userRepo.me()
+                return await userRepo.me(context.user_id)
             }
         },
         todoEdge: {
@@ -73,9 +70,9 @@ const GraphQLChangeTodoStatusMutation = mutationWithClientMutationId({
     outputFields: {
       viewer: {
         type: GraphQLUser,
-        resolve: async () => {
+        resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me()
+            return await userRepo.me(context.user_id)
         }
       },
       todo: {
@@ -109,9 +106,9 @@ const GraphQLMarkAllTodosMutation = mutationWithClientMutationId({
     outputFields: {
       viewer: {
         type: GraphQLUser,
-        resolve: async () => {
+        resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me()
+            return await userRepo.me(context.user_id)
         },
       },
       changedTodos: {
@@ -134,9 +131,9 @@ const GraphQLRemoveCompletedTodosMutation = mutationWithClientMutationId({
     outputFields: {
       viewer: {
         type: GraphQLUser,
-        resolve: async () => {
+        resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me()
+            return await userRepo.me(context.user_id)
         },
       },
       deletedIds: {
@@ -167,9 +164,10 @@ const GraphQLRemoveTodoMutation = mutationWithClientMutationId({
     outputFields: {
       viewer: {
         type: GraphQLUser,
-        resolve: async () => {
+        resolve: async (obj, args, context, info) => {
+            const userId = context.user_id
             const userRepo = new UserRepository()
-            return await userRepo.me()
+            return await userRepo.me(userId)
         },
       },
       deletedId: {

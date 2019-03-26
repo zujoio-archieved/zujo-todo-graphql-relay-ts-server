@@ -7,7 +7,7 @@ class Encryption {
      * @param payload
      * @returns Hash of payload
      */
-    public static async encrypt(payload: String){
+    public static async encrypt(payload: string){
         return bcrypt.hashSync(payload, 10);
     }
 
@@ -17,7 +17,7 @@ class Encryption {
      * @param hashed hashed string version of plain string
      * @returns Returns 
      */
-    public static async compareHash(plain: String, hashed: string){
+    public static async compareHash(plain: string, hashed: string){
         return bcrypt.compareSync(plain, hashed);
     }
 

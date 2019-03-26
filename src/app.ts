@@ -17,17 +17,21 @@ import mongoose from "mongoose";
 import { GraphQLServer } from "graphql-yoga"
 
 import { schema } from "./graphql/schema"
+import { authentication } from './common/utils/common.middlewares'
+import { JWT } from './common/utils/common.jwt'
 
 /**
  * Initialize express server
  */
 // context
-const context = (req) => ({
+const context = async (req) => ({
   req: req.request,
+  user_id: await JWT.extractUserIdfromReq(req.request)
 });
 const yogaServer = new GraphQLServer({ 
   schema:schema, 
-  context: context 
+  context: context,
+  middlewares:[authentication]
 })
 const app = yogaServer.express
 

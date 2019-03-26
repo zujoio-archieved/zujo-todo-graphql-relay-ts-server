@@ -6,9 +6,10 @@ import { nodeField } from "../global.defination";
 const GraphQLUserQueries = {
     viewer:{
         type: GraphQLUser,
-        resolve: async () =>{
+        resolve: async (obj, args, context, info) =>{
+            const userId = context.user_id
             const userRepo = new UserRepository()
-            return await userRepo.me()
+            return await userRepo.me(userId)
         }
     },
     node: nodeField

@@ -1,14 +1,14 @@
 import lodash from "lodash"
 
-import { IRepository } from "../interface/repository.interface"
 import { UserValidation } from "./user.validation"
 import { Encryption } from "../../common/utils/common.encryption"
 import { JWT } from "../../common/utils/common.jwt"
 import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
+import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
 
-class UserRepository implements IRepository{
+class UserRepository{
     constructor(){}
 
     /**
@@ -16,7 +16,7 @@ class UserRepository implements IRepository{
      * @param email email address of user
      * @param password password of user
      */
-    async login(email: String, password: String){
+    async login(email: string, password: string){
          // Find user
          const where = {
             email: email
@@ -26,8 +26,8 @@ class UserRepository implements IRepository{
             throw new Error("User not found!")
         }
 
-        if(Encryption.compareHash(password, user.password)){
-            const token =await JWT.generateToken(user._id.toHexString())
+        if(await Encryption.compareHash(password, user.password)){
+            const token = await JWT.generateToken(user._id.toHexString())
             const AuthToken = {
                 kind: USER_TOKEN_KIND.session,
                 accessToken: token
@@ -37,7 +37,7 @@ class UserRepository implements IRepository{
             // Save User
             const savedUser = await user.save();
             return {
-                accessToken: AuthToken,
+                authToken: AuthToken,
                 user: savedUser.toJSON()
             }
         }
@@ -47,24 +47,23 @@ class UserRepository implements IRepository{
     }
 
     /**
-     * Create User
+     * Register User
      * @param userPayload User input payload
      * @returns Object contains new created user and authentication token
      */
-    async create(userPayload:any){
+    async register(userPayload:any){
         // Validate unique parameters
         const isEmailAlreadyExists =await UserValidation.emailAlreadyExists(userPayload.email)
         if(isEmailAlreadyExists){
-            throw new Error("User with same email address already exists!")
+            throw new EmailAlreadyExists()
         }
 
-        // Encrypt password
-        const hashedPassword = await Encryption.encrypt(userPayload.password)
-
+       
         // Create User
         const user = new User({
             email: userPayload.email,
-            password: hashedPassword,
+            password: userPayload.password,
+            /*
             profile:{
                 name: userPayload.profile.name,
                 gender: userPayload.profile.gender,
@@ -72,6 +71,7 @@ class UserRepository implements IRepository{
                 website: userPayload.profile.website,
                 picture: userPayload.profile.picture,
             }
+            */
         })
 
         // Generate and assign token to created user
@@ -85,7 +85,7 @@ class UserRepository implements IRepository{
         // Save User
         const savedUser = await user.save();
         return {
-            accessToken: AuthToken,
+            authToken: AuthToken,
             user: savedUser.toJSON()
         }
     }
@@ -165,8 +165,8 @@ class UserRepository implements IRepository{
      * Get logged in user
      * @todo get by login user id
      */
-    async me(){
-        let user = await User.findOne({ _id: "5c8f8945e8174414327fcbec" })
+    async me(_id: string){
+        let user = await User.findOne({ _id: _id })
         if(!user){
             throw new Error("User not found!")
         }

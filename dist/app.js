@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,16 +25,22 @@ const connect_mongo_1 = __importDefault(require("connect-mongo"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const graphql_yoga_1 = require("graphql-yoga");
 const schema_1 = require("./graphql/schema");
+const common_middlewares_1 = require("./common/utils/common.middlewares");
+const common_jwt_1 = require("./common/utils/common.jwt");
 /**
  * Initialize express server
  */
 // context
-const context = (req) => ({
-    req: req.request,
+const context = (req) => __awaiter(this, void 0, void 0, function* () {
+    return ({
+        req: req.request,
+        user_id: yield common_jwt_1.JWT.extractUserIdfromReq(req.request)
+    });
 });
 const yogaServer = new graphql_yoga_1.GraphQLServer({
     schema: schema_1.schema,
-    context: context
+    context: context,
+    middlewares: [common_middlewares_1.authentication]
 });
 exports.yogaServer = yogaServer;
 const app = yogaServer.express;
