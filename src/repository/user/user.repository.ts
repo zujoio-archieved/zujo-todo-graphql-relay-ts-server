@@ -16,7 +16,7 @@ class UserRepository{
      * @param email email address of user
      * @param password password of user
      */
-    async login(email: String, password: String){
+    async login(email: string, password: string){
          // Find user
          const where = {
             email: email
@@ -26,8 +26,8 @@ class UserRepository{
             throw new Error("User not found!")
         }
 
-        if(Encryption.compareHash(password, user.password)){
-            const token =await JWT.generateToken(user._id.toHexString())
+        if(await Encryption.compareHash(password, user.password)){
+            const token = await JWT.generateToken(user._id.toHexString())
             const AuthToken = {
                 kind: USER_TOKEN_KIND.session,
                 accessToken: token
@@ -37,7 +37,7 @@ class UserRepository{
             // Save User
             const savedUser = await user.save();
             return {
-                accessToken: AuthToken,
+                authToken: AuthToken,
                 user: savedUser.toJSON()
             }
         }
@@ -58,13 +58,11 @@ class UserRepository{
             throw new EmailAlreadyExists()
         }
 
-        // Encrypt password
-        const hashedPassword = await Encryption.encrypt(userPayload.password)
-
+       
         // Create User
         const user = new User({
             email: userPayload.email,
-            password: hashedPassword,
+            password: userPayload.password,
             /*
             profile:{
                 name: userPayload.profile.name,
@@ -167,8 +165,8 @@ class UserRepository{
      * Get logged in user
      * @todo get by login user id
      */
-    async me(){
-        let user = await User.findOne({ _id: "5c8f8945e8174414327fcbec" })
+    async me(_id: string){
+        let user = await User.findOne({ _id: _id })
         if(!user){
             throw new Error("User not found!")
         }

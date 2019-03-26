@@ -1,8 +1,6 @@
 import errorHandler from "errorhandler";
 import { schema } from "./graphql/schema"
 
-import {  } from "./common/utils/common.exceptions"
-
 import {app, yogaServer} from "./app";
 require('events').EventEmitter.defaultMaxListeners = 20;
 
@@ -10,7 +8,6 @@ require('events').EventEmitter.defaultMaxListeners = 20;
  * Error Handler. Provides full stack - remove for production
  */
 app.use(errorHandler());
-
 
 const options = {
     port: process.env.PORT,

@@ -14,9 +14,10 @@ const global_defination_1 = require("../global.defination");
 const GraphQLUserQueries = {
     viewer: {
         type: user_typedef_1.GraphQLUser,
-        resolve: () => __awaiter(this, void 0, void 0, function* () {
+        resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
+            const userId = context.user_id;
             const userRepo = new user_1.UserRepository();
-            return yield userRepo.me();
+            return yield userRepo.me(userId);
         })
     },
     node: global_defination_1.nodeField

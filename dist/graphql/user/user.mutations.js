@@ -51,8 +51,43 @@ const GraphQLRegisterUserMutations = graphql_relay_1.mutationWithClientMutationI
         }
     })
 });
+const GraphQLLoginUserMutation = graphql_relay_1.mutationWithClientMutationId({
+    name: 'login',
+    inputFields: {
+        email: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+        password: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) }
+    },
+    outputFields: {
+        viewer: {
+            type: user_typedef_1.GraphQLUser,
+            resolve: ({ user, token, error }) => __awaiter(this, void 0, void 0, function* () {
+                return user;
+            })
+        },
+        token: {
+            type: graphql_1.GraphQLString,
+            resolve: ({ user, token, error }) => __awaiter(this, void 0, void 0, function* () {
+                return token;
+            })
+        }
+    },
+    mutateAndGetPayload: ({ email, password }) => __awaiter(this, void 0, void 0, function* () {
+        const userRepo = new index_1.UserRepository();
+        try {
+            const { user, authToken } = yield userRepo.login(email, password);
+            return {
+                user,
+                token: authToken.accessToken
+            };
+        }
+        catch (error) {
+            throw error;
+        }
+    })
+});
 const GraphQLUserMutations = {
-    register: GraphQLRegisterUserMutations
+    register: GraphQLRegisterUserMutations,
+    login: GraphQLLoginUserMutation
 };
 exports.GraphQLUserMutations = GraphQLUserMutations;
 //# sourceMappingURL=user.mutations.js.map

@@ -36,7 +36,7 @@ class UserRepository {
             if (!user) {
                 throw new Error("User not found!");
             }
-            if (common_encryption_1.Encryption.compareHash(password, user.password)) {
+            if (yield common_encryption_1.Encryption.compareHash(password, user.password)) {
                 const token = yield common_jwt_1.JWT.generateToken(user._id.toHexString());
                 const AuthToken = {
                     kind: common_constant_1.USER_TOKEN_KIND.session,
@@ -46,7 +46,7 @@ class UserRepository {
                 // Save User
                 const savedUser = yield user.save();
                 return {
-                    accessToken: AuthToken,
+                    authToken: AuthToken,
                     user: savedUser.toJSON()
                 };
             }
@@ -67,12 +67,10 @@ class UserRepository {
             if (isEmailAlreadyExists) {
                 throw new common_exceptions_1.EmailAlreadyExists();
             }
-            // Encrypt password
-            const hashedPassword = yield common_encryption_1.Encryption.encrypt(userPayload.password);
             // Create User
             const user = new user_1.User({
                 email: userPayload.email,
-                password: hashedPassword,
+                password: userPayload.password,
             });
             // Generate and assign token to created user
             const token = yield common_jwt_1.JWT.generateToken(user._id.toHexString());
@@ -162,9 +160,9 @@ class UserRepository {
      * Get logged in user
      * @todo get by login user id
      */
-    me() {
+    me(_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield user_1.User.findOne({ _id: "5c8f8945e8174414327fcbec" });
+            let user = yield user_1.User.findOne({ _id: _id });
             if (!user) {
                 throw new Error("User not found!");
             }
