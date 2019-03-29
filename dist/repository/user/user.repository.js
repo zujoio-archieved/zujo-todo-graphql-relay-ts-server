@@ -162,6 +162,7 @@ class UserRepository {
      */
     me(_id) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("_id", _id);
             let user = yield user_1.User.findOne({ _id: _id });
             if (!user) {
                 throw new Error("User not found!");

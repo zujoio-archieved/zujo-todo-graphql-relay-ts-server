@@ -24,6 +24,7 @@ const getPaginatedRecords = async (query: any, where: any, args: any) =>{
         orderBy["_id"] = -1
     }
 
+
     const edges = await query.find(where)
                             .limit(limit)
                             .sort(orderBy)

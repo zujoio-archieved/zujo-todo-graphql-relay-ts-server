@@ -166,6 +166,7 @@ class UserRepository{
      * @todo get by login user id
      */
     async me(_id: string){
+        console.log("_id", _id)
         let user = await User.findOne({ _id: _id })
         if(!user){
             throw new Error("User not found!")
