@@ -11,9 +11,9 @@ const userSchema = new mongoose_1.default.Schema({
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    facebook: String,
-    twitter: String,
-    google: String,
+    facebook_id: String,
+    twitter_id: String,
+    google_id: String,
     tokens: Array,
     profile: {
         name: String,

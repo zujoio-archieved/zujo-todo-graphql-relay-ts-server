@@ -10,9 +10,9 @@ const userSchema = new mongoose.Schema({
         passwordResetToken: String,
         passwordResetExpires: Date,
     
-        facebook: String,
-        twitter: String,
-        google: String,
+        facebook_id: String,
+        twitter_id: String,
+        google_id: String,
         tokens: Array,
     
         profile: {

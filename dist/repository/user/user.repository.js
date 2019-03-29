@@ -169,6 +169,66 @@ class UserRepository {
             return user;
         });
     }
+    oauthGoogle(profile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const googleUser = yield user_1.User.findOne({ google_id: profile.id });
+                if (googleUser)
+                    return yield this.generateAndSaveToken(googleUser);
+                else {
+                    let user = new user_1.User({
+                        google_id: profile.id,
+                        email: profile.emails[0].value,
+                        profile: {
+                            name: profile.displayName,
+                            picture: profile._json.picture
+                        }
+                    });
+                    return yield this.generateAndSaveToken(user);
+                }
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
+    oauthFacebook(profile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fbUser = yield user_1.User.findOne({ facebook_id: profile.id });
+                if (fbUser)
+                    return yield this.generateAndSaveToken(fbUser);
+                else {
+                    let user = new user_1.User({
+                        facebook_id: profile.id,
+                        email: profile.emails[0].value,
+                        profile: {
+                            name: profile.displayName
+                        }
+                    });
+                    return yield this.generateAndSaveToken(user);
+                }
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
+    generateAndSaveToken(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = yield common_jwt_1.JWT.generateToken(user._id.toHexString());
+            const AuthToken = {
+                kind: common_constant_1.USER_TOKEN_KIND.session,
+                accessToken: token
+            };
+            user.tokens.push(AuthToken);
+            const savedUser = yield user.save();
+            return {
+                authToken: AuthToken,
+                user: savedUser.toJSON()
+            };
+        });
+    }
 }
 exports.UserRepository = UserRepository;
 //# sourceMappingURL=user.repository.js.map

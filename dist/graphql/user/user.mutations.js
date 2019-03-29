@@ -12,6 +12,7 @@ const graphql_relay_1 = require("graphql-relay");
 const graphql_1 = require("graphql");
 const user_typedef_1 = require("./user.typedef");
 const index_1 = require("../../repository/user/index");
+require("../../common/utils/passport");
 const GraphQLRegisterUserMutations = graphql_relay_1.mutationWithClientMutationId({
     name: 'register',
     inputFields: {
@@ -85,6 +86,36 @@ const GraphQLLoginUserMutation = graphql_relay_1.mutationWithClientMutationId({
         }
     })
 });
+// const authenticateGoogle = (req: Request, res: Response) => new Promise((resolve, reject) => {
+//     console.log('\n====> body', req.body);
+//     passport.authenticate('google-token', { session: false }, (err, data, info) => {
+//         if (err) reject(err);
+//         resolve({ data, info });
+//     })(req, res);
+// });
+// const GraphQLGoogleOAuthMutation = mutationWithClientMutationId({
+//     name: 'googleAuth',
+//     inputFields:{
+//         accessToken:{ type: new GraphQLNonNull(GraphQLString) },
+//     },
+//     outputFields: {
+//         viewer: {
+//             type: GraphQLString,
+//             resolve: async ({viewer}) => viewer
+//         },
+//         token: {
+//             type: GraphQLString,
+//             resolve: async ({token}) => token
+//         }
+//     },
+//     mutateAndGetPayload: async (obj, context, _info) => {
+//         context.req.body = {access_token: obj.accessToken, ...context.req.body}
+//         const { data, info } = await authenticateGoogle(context.req, context.res);
+//         console.log("data", data)
+//         console.log("info", info)
+//         return { viewer:"abc", token:"333" }
+//     }
+// })
 const GraphQLUserMutations = {
     register: GraphQLRegisterUserMutations,
     login: GraphQLLoginUserMutation
