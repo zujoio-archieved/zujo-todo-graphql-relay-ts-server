@@ -7,6 +7,7 @@ import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
 import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
+import {sendMail} from '../../common/mailer/mailer';
 
 class UserRepository{
     constructor(){}
@@ -177,7 +178,10 @@ class UserRepository{
     async oauthGoogle(profile){
         try{
             const googleUser = await User.findOne({ google_id: profile.id });
-            if(googleUser) return await this.generateAndSaveToken(googleUser);
+            if(googleUser){
+                sendMail(profile.emails[0].value, profile.displayName, `Welcome back ${profile.displayName} - Zujo`, 'login');
+                return await this.generateAndSaveToken(googleUser);
+                }
             else{
                 let user = new User({
                     google_id: profile.id,
@@ -187,6 +191,7 @@ class UserRepository{
                         picture: profile._json.picture
                     }
                 });
+                sendMail(profile.emails[0].value, profile.displayName, `Warm Welcome ${profile.displayName} - Zujo`, 'signup');
                 return await this.generateAndSaveToken(user);
             }
         }

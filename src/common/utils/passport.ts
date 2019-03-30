@@ -3,6 +3,7 @@ import passport from 'passport';
 import {Strategy as GoogleTokenStrategy} from 'passport-google-token';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import {UserRepository} from '../../repository/user/user.repository';
+import {sendMail} from '../mailer/mailer';
 
 config();
 

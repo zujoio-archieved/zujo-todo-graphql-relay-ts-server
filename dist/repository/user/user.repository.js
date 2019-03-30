@@ -19,6 +19,7 @@ const user_1 = require("../../schemas/user");
 const common_constant_1 = require("../../common/utils/common.constant");
 const utils_1 = require("../../schemas/utils");
 const common_exceptions_1 = require("../../common/utils/common.exceptions");
+const mailer_1 = require("../../common/mailer/mailer");
 class UserRepository {
     constructor() { }
     /**
@@ -173,8 +174,10 @@ class UserRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const googleUser = yield user_1.User.findOne({ google_id: profile.id });
-                if (googleUser)
+                if (googleUser) {
+                    mailer_1.sendMail(profile.emails[0].value, profile.displayName, `Welcome back ${profile.displayName} - Zujo`, 'login');
                     return yield this.generateAndSaveToken(googleUser);
+                }
                 else {
                     let user = new user_1.User({
                         google_id: profile.id,
@@ -184,6 +187,7 @@ class UserRepository {
                             picture: profile._json.picture
                         }
                     });
+                    mailer_1.sendMail(profile.emails[0].value, profile.displayName, `Warm Welcome ${profile.displayName} - Zujo`, 'signup');
                     return yield this.generateAndSaveToken(user);
                 }
             }
