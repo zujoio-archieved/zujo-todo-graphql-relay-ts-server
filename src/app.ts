@@ -56,6 +56,7 @@ mongoose.connect(mongoUrl).then(
   console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
   process.exit();
 });
+app.use(express.static(path.join(__dirname, '../Upload')))
 
 /**
  * Configure express

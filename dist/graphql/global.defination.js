@@ -19,7 +19,9 @@ const graphql_relay_1 = require("graphql-relay");
 const index_1 = require("../repository/user/index");
 const user_1 = require("../schemas/user");
 const todo_1 = require("../schemas/todo");
+const Image_1 = require("../schemas/Image");
 const todo_2 = require("../repository/todo");
+const Image_2 = require("../repository/Image");
 /**
  * Defination for
  */
@@ -37,6 +39,10 @@ const { nodeInterface, nodeField } = graphql_relay_1.nodeDefinitions((globalId) 
         const userRepo = new index_1.UserRepository();
         return userRepo.findOne(id);
     }
+    if (type === 'Image') {
+        const imageRepo = new Image_2.ImageRepository();
+        return imageRepo.getImage(id);
+    }
     return null;
 }), (obj) => __awaiter(this, void 0, void 0, function* () {
     if (obj instanceof todo_1.ToDo) {
@@ -46,6 +52,10 @@ const { nodeInterface, nodeField } = graphql_relay_1.nodeDefinitions((globalId) 
     if (obj instanceof user_1.User) {
         const types = yield Promise.resolve().then(() => __importStar(require("./user/user.typedef")));
         return types.GraphQLUser;
+    }
+    if (obj instanceof Image_1.Image) {
+        const types = yield Promise.resolve().then(() => __importStar(require("./image/image.typedef")));
+        return types.GraphQLImage;
     }
     return null;
 }));

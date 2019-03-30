@@ -1,5 +1,5 @@
 import { GraphQLSchema, GraphQLObjectType } from "graphql";
-
+import{GraphQLimageMutations,GraphqlImageQuery} from './image'
 import {  GraphQLUserMutations, GraphQLUserQueries } from "./user"
 import { GraphQLTodoMutations, GraphQLTodoSubscription } from "./todo"
 
@@ -9,7 +9,7 @@ import { GraphQLTodoMutations, GraphQLTodoSubscription } from "./todo"
 const RootQuery = new GraphQLObjectType({
     name: "Root",
     fields: { 
-        ...GraphQLUserQueries 
+        ...GraphQLUserQueries
     }
 });
   
@@ -20,7 +20,8 @@ const RootMutation = new GraphQLObjectType({
     name: "Mutation",
     fields:{ 
         ...GraphQLUserMutations,
-        ...GraphQLTodoMutations
+        ...GraphQLTodoMutations,
+        ...GraphQLimageMutations
     }
 });
   

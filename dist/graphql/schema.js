@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_1 = require("graphql");
+const image_1 = require("./image");
 const user_1 = require("./user");
 const todo_1 = require("./todo");
 /**
@@ -15,7 +16,7 @@ const RootQuery = new graphql_1.GraphQLObjectType({
  */
 const RootMutation = new graphql_1.GraphQLObjectType({
     name: "Mutation",
-    fields: Object.assign({}, user_1.GraphQLUserMutations, todo_1.GraphQLTodoMutations)
+    fields: Object.assign({}, user_1.GraphQLUserMutations, todo_1.GraphQLTodoMutations, image_1.GraphQLimageMutations)
 });
 /**
  * Root Subscriptions

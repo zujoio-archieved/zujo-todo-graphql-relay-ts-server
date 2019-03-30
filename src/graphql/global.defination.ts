@@ -7,8 +7,9 @@ import {
 import { UserRepository } from "../repository/user/index"
 import { User } from "../schemas/user"
 import { ToDo } from "../schemas/todo"
+import { Image } from "../schemas/Image"
 import { TodoRepository } from "../repository/todo";
-
+import { ImageRepository } from "../repository/Image";
 
 
 /**
@@ -29,6 +30,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
             const userRepo = new UserRepository()
             return userRepo.findOne(id);
         }
+        if (type === 'Image') {
+            const imageRepo = new ImageRepository()
+            return imageRepo.getImage(id);
+        }
         return null;
     },
     async obj => {
@@ -39,6 +44,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
         if (obj instanceof User) {
             const types = await import("./user/user.typedef")
             return types.GraphQLUser;
+        }
+        if (obj instanceof Image) {
+            const types = await import("./image/image.typedef")
+            return types.GraphQLImage;
         }
         return null
     },
