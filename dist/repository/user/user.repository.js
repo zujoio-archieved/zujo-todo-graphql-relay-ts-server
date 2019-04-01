@@ -108,7 +108,7 @@ class UserRepository {
             const where = {
                 _id: userPayload.id
             };
-            let user = yield user_1.User.findOne(where);
+            let user = yield this._loader.userById(userPayload.id);
             if (!user) {
                 throw new Error("User not found!");
             }
@@ -133,7 +133,7 @@ class UserRepository {
             const where = {
                 _id: userPayload.id
             };
-            let user = yield user_1.User.findOne(where);
+            let user = yield this._loader.userById(userPayload.id);
             if (!user) {
                 throw new Error("User not found!");
             }
@@ -144,19 +144,11 @@ class UserRepository {
     }
     /**
      * Find one record
-     * @param id ID of user
+     * @param _id ID of user
      */
-    findOne(id) {
+    findOne(_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Find user
-            const where = {
-                _id: id
-            };
-            let user = yield user_1.User.findOne(where);
-            if (!user) {
-                throw new Error("User not found!");
-            }
-            return user;
+            return yield this._loader.userById(_id);
         });
     }
     /**
@@ -166,13 +158,6 @@ class UserRepository {
     me(_id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this._loader.userById(_id);
-            /*
-            let user = await User.findOne({ _id: _id })
-            if(!user){
-                throw new Error("User not found!")
-            }
-            return user
-            */
         });
     }
 }

@@ -1,6 +1,5 @@
 import DataLoader from 'dataloader'
 import { User, UserModel } from '../schemas/user'
-import { toObjectId } from '../common/utils/common.mongoose'
 
 class UserLoader{
     private _loader = new DataLoader(
