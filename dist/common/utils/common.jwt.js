@@ -52,7 +52,6 @@ class JWT {
         return __awaiter(this, void 0, void 0, function* () {
             if (req) {
                 const headers = req && req.headers;
-                console.log("const headers", headers);
                 if (headers && headers['authorization']) {
                     try {
                         const authorization = headers['authorization'];

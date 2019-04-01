@@ -17,14 +17,32 @@ class UserLoader {
     constructor() {
         this._loader = new dataloader_1.default((keys) => __awaiter(this, void 0, void 0, function* () {
             return yield user_1.User.find({
-                $in: keys
+                _id: { $in: keys }
             });
         }));
     }
-    load(id) {
+    userById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return;
+            return this._loader.load(id);
+        });
+    }
+    usersByID(ids) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this._loader.loadMany(ids);
+        });
+    }
+    primeUser(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._loader.prime(user._id, user);
+        });
+    }
+    primeUsers(users) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (let user of users) {
+                this.primeUser(user);
+            }
         });
     }
 }
+exports.UserLoader = UserLoader;
 //# sourceMappingURL=user.loaders.js.map

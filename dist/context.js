@@ -11,10 +11,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = require("./repository/user");
 const todo_1 = require("./repository/todo");
 const common_jwt_1 = require("./common/utils/common.jwt");
+const user_loaders_1 = require("./loaders/user.loaders");
 class Context {
     constructor(request) {
         this._userRepository = new user_1.UserRepository();
         this._todoRepository = new todo_1.TodoRepository();
+        this._userLoader = new user_loaders_1.UserLoader();
         this._request = request;
     }
     get request() {
@@ -25,6 +27,9 @@ class Context {
     }
     get todoRepository() {
         return this._todoRepository;
+    }
+    get userLoader() {
+        return this._userLoader;
     }
     userId() {
         return __awaiter(this, void 0, void 0, function* () {

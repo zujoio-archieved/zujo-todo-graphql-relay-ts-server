@@ -7,9 +7,10 @@ import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
 import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
+import { UserLoader } from "../../loaders/user.loaders";
 
 class UserRepository{
-    constructor(){}
+    private _loader:UserLoader = new UserLoader()
 
     /**
      * Login user with credentials
@@ -166,13 +167,14 @@ class UserRepository{
      * @todo get by login user id
      */
     async me(_id: string){
-        console.log("_id", _id)
+        return await this._loader.userById(_id)
+        /*
         let user = await User.findOne({ _id: _id })
         if(!user){
             throw new Error("User not found!")
         }
-
         return user
+        */
     }
 }
 
