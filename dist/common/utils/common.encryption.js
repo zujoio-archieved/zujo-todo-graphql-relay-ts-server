@@ -31,7 +31,7 @@ class Encryption {
      * Compare plain string with Hash
      * @param plain plain string needs to compare with hashsed
      * @param hashed hashed string version of plain string
-     * @returns Returns
+     * @returns Returns boolean defines True or False comparision
      */
     static compareHash(plain, hashed) {
         return __awaiter(this, void 0, void 0, function* () {

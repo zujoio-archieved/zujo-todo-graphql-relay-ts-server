@@ -7,7 +7,7 @@ const GraphQLUserQueries = {
     viewer:{
         type: GraphQLUser,
         resolve: async (obj, args, context, info) =>{
-            const userId = context.user_id
+            const userId = await context.userId()
             const userRepo = new UserRepository()
             return await userRepo.me(userId)
         }

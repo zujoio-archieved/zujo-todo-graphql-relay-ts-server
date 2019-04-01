@@ -1,11 +1,13 @@
 import lodash from "lodash"
 import mongoose from 'mongoose'
+import DataLoader from 'dataloader'
 
 import { ToDo } from "../../schemas/todo/index"
 import { getPaginatedRecords } from '../../common/utils/common.mongoose'
+import { TodoLoader } from "../../loaders/todo.loaders";
 
 export class TodoRepository{
-
+    private _loader: TodoLoader = new TodoLoader()
     /**
      * Fetch todo(s)
      * @param status filter by status
@@ -19,6 +21,10 @@ export class TodoRepository{
         }
 
         const todos = await getPaginatedRecords(ToDo, where, args)
+
+        // prime records to loader
+        this._loader.primeTodos(todos)
+
         return todos
     }
 
@@ -27,10 +33,7 @@ export class TodoRepository{
      * @param id Unique Id
      */
     public async getTodo(id: string){
-        let where = {
-            _id: mongoose.Types.ObjectId(id)
-        }
-        return await ToDo.findById(where)
+        return await this._loader.todoById(id)
     }
 
     /**
@@ -85,6 +88,10 @@ export class TodoRepository{
      */
     public async removeCompletedTodos(){
         const todos = await ToDo.find({ complete: true });
+        // prime records to loader
+        this._loader.primeTodos(todos)
+
+        // remove todos
         await ToDo.remove({ complete: true });
         const todoIds = lodash.map(todos, todo =>{
             return todo._id.toHexString()

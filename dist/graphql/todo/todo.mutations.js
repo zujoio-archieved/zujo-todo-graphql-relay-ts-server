@@ -31,7 +31,8 @@ const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
             type: user_1.GraphQLUser,
             resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
                 const userRepo = new user_2.UserRepository();
-                return yield userRepo.me(context.user_id);
+                const userId = yield context.userId();
+                return yield userRepo.me(userId);
             })
         },
         todoEdge: {
@@ -73,7 +74,8 @@ const GraphQLChangeTodoStatusMutation = graphql_relay_1.mutationWithClientMutati
             type: user_1.GraphQLUser,
             resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
                 const userRepo = new user_2.UserRepository();
-                return yield userRepo.me(context.user_id);
+                const userId = yield context.userId();
+                return yield userRepo.me(userId);
             })
         },
         todo: {
@@ -106,7 +108,8 @@ const GraphQLMarkAllTodosMutation = graphql_relay_1.mutationWithClientMutationId
             type: user_1.GraphQLUser,
             resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
                 const userRepo = new user_2.UserRepository();
-                return yield userRepo.me(context.user_id);
+                const userId = yield context.userId();
+                return yield userRepo.me(userId);
             }),
         },
         changedTodos: {
@@ -130,7 +133,8 @@ const GraphQLRemoveCompletedTodosMutation = graphql_relay_1.mutationWithClientMu
             type: user_1.GraphQLUser,
             resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
                 const userRepo = new user_2.UserRepository();
-                return yield userRepo.me(context.user_id);
+                const userId = yield context.userId();
+                return yield userRepo.me(userId);
             }),
         },
         deletedIds: {
@@ -159,8 +163,8 @@ const GraphQLRemoveTodoMutation = graphql_relay_1.mutationWithClientMutationId({
         viewer: {
             type: user_1.GraphQLUser,
             resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
-                const userId = context.user_id;
                 const userRepo = new user_2.UserRepository();
+                const userId = yield context.userId();
                 return yield userRepo.me(userId);
             }),
         },

@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const index_1 = require("../../schemas/todo/index");
 const common_mongoose_1 = require("../../common/utils/common.mongoose");
+const todo_loaders_1 = require("../../loaders/todo.loaders");
 class TodoRepository {
+    constructor() {
+        this._loader = new todo_loaders_1.TodoLoader();
+    }
     /**
      * Fetch todo(s)
      * @param status filter by status
@@ -28,6 +31,8 @@ class TodoRepository {
                 where["complete"] = true;
             }
             const todos = yield common_mongoose_1.getPaginatedRecords(index_1.ToDo, where, args);
+            // prime records to loader
+            this._loader.primeTodos(todos);
             return todos;
         });
     }
@@ -37,10 +42,7 @@ class TodoRepository {
      */
     getTodo(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let where = {
-                _id: mongoose_1.default.Types.ObjectId(id)
-            };
-            return yield index_1.ToDo.findById(where);
+            return yield this._loader.todoById(id);
         });
     }
     /**
@@ -100,6 +102,9 @@ class TodoRepository {
     removeCompletedTodos() {
         return __awaiter(this, void 0, void 0, function* () {
             const todos = yield index_1.ToDo.find({ complete: true });
+            // prime records to loader
+            this._loader.primeTodos(todos);
+            // remove todos
             yield index_1.ToDo.remove({ complete: true });
             const todoIds = lodash_1.default.map(todos, todo => {
                 return todo._id.toHexString();

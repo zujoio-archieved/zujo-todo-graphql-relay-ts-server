@@ -36,6 +36,7 @@ class JWT{
     public static async extractUserIdfromReq(req){
         if(req){
             const headers = req && req.headers
+            console.log("const headers", headers)
             if(headers && headers['authorization']){
                 try{
                     const authorization = headers['authorization'];

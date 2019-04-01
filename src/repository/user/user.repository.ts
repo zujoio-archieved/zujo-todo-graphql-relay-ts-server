@@ -7,10 +7,13 @@ import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
 import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
+
 import {sendMail} from '../../common/mailer/mailer';
+import { UserLoader } from "../../loaders/user.loaders";
+
 
 class UserRepository{
-    constructor(){}
+    private _loader:UserLoader = new UserLoader()
 
     /**
      * Login user with credentials
@@ -101,7 +104,7 @@ class UserRepository{
         userPayload.id = convertToObjectId(userPayload.id)
 
         // Validate user by specified User Id
-        const isEmailAlreadyExistsExceptId =await UserValidation.emailAlreadyExistsExceptId(userPayload.id, userPayload.email)
+        const isEmailAlreadyExistsExceptId = await UserValidation.emailAlreadyExistsExceptId(userPayload.id, userPayload.email)
         if(isEmailAlreadyExistsExceptId){
             throw new Error("User with same email address already exists!")
         }
@@ -110,7 +113,7 @@ class UserRepository{
         const where = {
             _id: userPayload.id
         }
-        let user = await User.findOne(where)
+        let user = await this._loader.userById(userPayload.id)
         if(!user){
             throw new Error("User not found!")
         }
@@ -136,7 +139,7 @@ class UserRepository{
         const where = {
             _id: userPayload.id
         }
-        let user = await User.findOne(where)
+        let user = await this._loader.userById(userPayload.id)
         if(!user){
             throw new Error("User not found!")
         }
@@ -148,18 +151,10 @@ class UserRepository{
 
     /**
      * Find one record
-     * @param id ID of user
+     * @param _id ID of user
      */
-    async findOne(id: String){
-        // Find user
-        const where = {
-            _id:id
-        }
-        let user = await User.findOne(where)
-        if(!user){
-            throw new Error("User not found!")
-        }
-        return user
+    async findOne(_id: string){
+        return await this._loader.userById(_id)
     }
 
     /**
@@ -167,12 +162,7 @@ class UserRepository{
      * @todo get by login user id
      */
     async me(_id: string){
-        let user = await User.findOne({ _id: _id })
-        if(!user){
-            throw new Error("User not found!")
-        }
-
-        return user
+        return await this._loader.userById(_id)
     }
 
     async oauthGoogle(profile){
