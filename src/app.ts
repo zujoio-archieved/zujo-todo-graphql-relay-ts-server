@@ -19,15 +19,13 @@ import { GraphQLServer } from "graphql-yoga"
 import { schema } from "./graphql/schema"
 import { authentication } from './common/utils/common.middlewares'
 import { JWT } from './common/utils/common.jwt'
+import { Context } from "./context";
 
 /**
  * Initialize express server
  */
 // context
-const context = async (req) => ({
-  req: req.request,
-  user_id: await JWT.extractUserIdfromReq(req.request)
-});
+const context = async (req) => (new Context(req.request));
 const yogaServer = new GraphQLServer({ 
   schema:schema, 
   context: context,

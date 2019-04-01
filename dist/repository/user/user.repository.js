@@ -19,8 +19,11 @@ const user_1 = require("../../schemas/user");
 const common_constant_1 = require("../../common/utils/common.constant");
 const utils_1 = require("../../schemas/utils");
 const common_exceptions_1 = require("../../common/utils/common.exceptions");
+const user_loaders_1 = require("../../loaders/user.loaders");
 class UserRepository {
-    constructor() { }
+    constructor() {
+        this._loader = new user_loaders_1.UserLoader();
+    }
     /**
      * Login user with credentials
      * @param email email address of user
@@ -105,7 +108,7 @@ class UserRepository {
             const where = {
                 _id: userPayload.id
             };
-            let user = yield user_1.User.findOne(where);
+            let user = yield this._loader.userById(userPayload.id);
             if (!user) {
                 throw new Error("User not found!");
             }
@@ -130,7 +133,7 @@ class UserRepository {
             const where = {
                 _id: userPayload.id
             };
-            let user = yield user_1.User.findOne(where);
+            let user = yield this._loader.userById(userPayload.id);
             if (!user) {
                 throw new Error("User not found!");
             }
@@ -141,19 +144,11 @@ class UserRepository {
     }
     /**
      * Find one record
-     * @param id ID of user
+     * @param _id ID of user
      */
-    findOne(id) {
+    findOne(_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Find user
-            const where = {
-                _id: id
-            };
-            let user = yield user_1.User.findOne(where);
-            if (!user) {
-                throw new Error("User not found!");
-            }
-            return user;
+            return yield this._loader.userById(_id);
         });
     }
     /**
@@ -162,11 +157,7 @@ class UserRepository {
      */
     me(_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield user_1.User.findOne({ _id: _id });
-            if (!user) {
-                throw new Error("User not found!");
-            }
-            return user;
+            return yield this._loader.userById(_id);
         });
     }
 }
