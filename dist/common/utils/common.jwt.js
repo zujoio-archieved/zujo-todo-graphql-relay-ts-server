@@ -16,6 +16,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = __importStar(require("jsonwebtoken"));
+const common_exceptions_1 = require("./common.exceptions");
 class JWT {
     /**
      * Generate token
@@ -41,7 +42,12 @@ class JWT {
      */
     static verifyToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            return jwt.verify(token, process.env.SESSION_SECRET);
+            try {
+                return jwt.verify(token, process.env.SESSION_SECRET);
+            }
+            catch (error) {
+                throw new common_exceptions_1.InvalidToken();
+            }
         });
     }
     /**
@@ -62,6 +68,9 @@ class JWT {
                     catch (error) {
                         throw error;
                     }
+                }
+                else {
+                    throw new common_exceptions_1.Authorization();
                 }
             }
             else {

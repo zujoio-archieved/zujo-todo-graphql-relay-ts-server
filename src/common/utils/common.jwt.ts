@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import { InvalidToken, Authorization } from './common.exceptions'
 
 class JWT{
     /**
@@ -26,7 +27,12 @@ class JWT{
      * @param token jwt token
      */
     public static async verifyToken(token: string){
-        return jwt.verify(token, process.env.SESSION_SECRET)
+        try{
+            return jwt.verify(token, process.env.SESSION_SECRET)
+        }
+        catch(error){
+            throw new InvalidToken()
+        }
     }
 
     /**
@@ -36,7 +42,6 @@ class JWT{
     public static async extractUserIdfromReq(req){
         if(req){
             const headers = req && req.headers
-            console.log("const headers", headers)
             if(headers && headers['authorization']){
                 try{
                     const authorization = headers['authorization'];
@@ -47,6 +52,9 @@ class JWT{
                 catch(error){
                     throw error
                 }
+            }
+            else{
+                throw new Authorization()
             }
         }
         else{

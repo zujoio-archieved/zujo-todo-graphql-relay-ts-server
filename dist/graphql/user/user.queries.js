@@ -15,9 +15,14 @@ const GraphQLUserQueries = {
     viewer: {
         type: user_typedef_1.GraphQLUser,
         resolve: (obj, args, context, info) => __awaiter(this, void 0, void 0, function* () {
-            const userId = yield context.userId();
-            const userRepo = new user_1.UserRepository();
-            return yield userRepo.me(userId);
+            try {
+                const userId = yield context.userId();
+                const userRepo = new user_1.UserRepository();
+                return yield userRepo.me(userId);
+            }
+            catch (error) {
+                throw error;
+            }
         })
     },
     node: global_defination_1.nodeField

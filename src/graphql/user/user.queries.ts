@@ -7,9 +7,14 @@ const GraphQLUserQueries = {
     viewer:{
         type: GraphQLUser,
         resolve: async (obj, args, context, info) =>{
-            const userId = await context.userId()
-            const userRepo = new UserRepository()
-            return await userRepo.me(userId)
+            try{
+                const userId = await context.userId()
+                const userRepo = new UserRepository()
+                return await userRepo.me(userId)
+            }
+            catch(error){
+                throw error
+            }
         }
     },
     node: nodeField

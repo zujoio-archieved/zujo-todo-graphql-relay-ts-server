@@ -24,4 +24,13 @@ class InvalidToken extends Error {
     }
 }
 exports.InvalidToken = InvalidToken;
+class Authorization extends Error {
+    constructor() {
+        super(...arguments);
+        this.code = 1002;
+        this.message = this.message ||
+            'Authorization required!';
+    }
+}
+exports.Authorization = Authorization;
 //# sourceMappingURL=common.exceptions.js.map
