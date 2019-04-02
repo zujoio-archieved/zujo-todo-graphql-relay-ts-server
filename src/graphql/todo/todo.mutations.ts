@@ -25,7 +25,8 @@ const GraphQlAddTodoMutation = mutationWithClientMutationId({
             type: GraphQLUser,
             resolve: async (obj, args, context, info) => {
                 const userRepo = new UserRepository()
-                return await userRepo.me(context.user_id)
+                const userId = await context.userId()
+                return await userRepo.me(userId)
             }
         },
         todoEdge: {
@@ -72,7 +73,8 @@ const GraphQLChangeTodoStatusMutation = mutationWithClientMutationId({
         type: GraphQLUser,
         resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me(context.user_id)
+            const userId = await context.userId()
+            return await userRepo.me(userId)
         }
       },
       todo: {
@@ -108,7 +110,8 @@ const GraphQLMarkAllTodosMutation = mutationWithClientMutationId({
         type: GraphQLUser,
         resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me(context.user_id)
+            const userId = await context.userId()
+            return await userRepo.me(userId)
         },
       },
       changedTodos: {
@@ -133,7 +136,8 @@ const GraphQLRemoveCompletedTodosMutation = mutationWithClientMutationId({
         type: GraphQLUser,
         resolve: async (obj, args, context, info) => {
             const userRepo = new UserRepository()
-            return await userRepo.me(context.user_id)
+            const userId = await context.userId()
+            return await userRepo.me(userId)
         },
       },
       deletedIds: {
@@ -165,8 +169,8 @@ const GraphQLRemoveTodoMutation = mutationWithClientMutationId({
       viewer: {
         type: GraphQLUser,
         resolve: async (obj, args, context, info) => {
-            const userId = context.user_id
-            const userRepo = new UserRepository()
+            const userRepo = new UserRepository();
+            const userId = await context.userId()
             return await userRepo.me(userId)
         },
       },

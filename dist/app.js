@@ -28,19 +28,13 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const graphql_yoga_1 = require("graphql-yoga");
 const schema_1 = require("./graphql/schema");
 const common_middlewares_1 = require("./common/utils/common.middlewares");
-const common_jwt_1 = require("./common/utils/common.jwt");
+const context_1 = require("./context");
 require("./common/utils/passport");
 /**
  * Initialize express server
  */
 // context
-let context = (req, res) => __awaiter(this, void 0, void 0, function* () {
-    return ({
-        req: req.request,
-        res: res,
-        user_id: yield common_jwt_1.JWT.extractUserIdfromReq(req.request)
-    });
-});
+const context = (req, res) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request, res)); });
 const yogaServer = new graphql_yoga_1.GraphQLServer({
     schema: schema_1.schema,
     context: context,

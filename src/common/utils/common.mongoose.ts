@@ -1,5 +1,5 @@
 import { fromBase64 } from './common.encoding'
-
+import mongoose from 'mongoose'
 /**
  * Get condition for pagination
  * @param where Conditional where
@@ -24,10 +24,17 @@ const getPaginatedRecords = async (query: any, where: any, args: any) =>{
         orderBy["_id"] = -1
     }
 
+
     const edges = await query.find(where)
                             .limit(limit)
                             .sort(orderBy)
     return edges
 }
 
-export { getPaginatedRecords }
+/**
+ * Convert string into mongodb id
+ * @param id String id
+ */
+const toObjectId = (id: string) => mongoose.Types.ObjectId(id);
+
+export { getPaginatedRecords, toObjectId }
