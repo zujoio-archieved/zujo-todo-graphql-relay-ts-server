@@ -2,6 +2,9 @@ import { JWT } from "./common.jwt"
 import { InvalidToken } from './common.exceptions'
 
 const authentication = async (resolve, root, args, context, info) => {
+  // console.log("root", root)
+  // console.log("args", args)
+  // console.log("authentication middleware", context.req.body)
     const token = (context 
         && context.req 
         && context.req.headers 

@@ -7,7 +7,10 @@ import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
 import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
+
+import {sendMail} from '../../common/mailer/mailer';
 import { UserLoader } from "../../loaders/user.loaders";
+
 
 class UserRepository{
     private _loader:UserLoader = new UserLoader()
@@ -160,6 +163,66 @@ class UserRepository{
      */
     async me(_id: string){
         return await this._loader.userById(_id)
+    }
+
+    async oauthGoogle(profile){
+        try{
+            const googleUser = await User.findOne({ google_id: profile.id });
+            if(googleUser){
+                sendMail(profile.emails[0].value, profile.displayName, `Welcome back ${profile.displayName} - Zujo`, 'login');
+                return await this.generateAndSaveToken(googleUser);
+                }
+            else{
+                let user = new User({
+                    google_id: profile.id,
+                    email: profile.emails[0].value,
+                    profile: {
+                        name: profile.displayName,
+                        picture: profile._json.picture
+                    }
+                });
+                sendMail(profile.emails[0].value, profile.displayName, `Warm Welcome ${profile.displayName} - Zujo`, 'signup');
+                return await this.generateAndSaveToken(user);
+            }
+        }
+        catch(err){
+            throw new Error(err)
+        }
+    }
+
+    async oauthFacebook(profile){
+        try{
+            const fbUser = await User.findOne({ facebook_id: profile.id})
+            if(fbUser) return await this.generateAndSaveToken(fbUser)
+            
+            else{
+                let user = new User({
+                    facebook_id: profile.id,
+                    email: profile.emails[0].value,
+                    profile: {
+                        name: profile.displayName
+                }
+            });
+            return await this.generateAndSaveToken(user)
+            }
+        }
+        catch(err){
+            throw new Error(err)
+        }
+    }
+
+    private async generateAndSaveToken(user){
+        const token = await JWT.generateToken(user._id.toHexString())
+        const AuthToken = {
+            kind: USER_TOKEN_KIND.session,
+            accessToken: token
+        }
+        user.tokens.push(AuthToken)
+        const savedUser = await user.save();
+        return  {
+            authToken: AuthToken,
+            user: savedUser.toJSON()
+        }
     }
 }
 

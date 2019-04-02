@@ -19,6 +19,7 @@ const user_1 = require("../../schemas/user");
 const common_constant_1 = require("../../common/utils/common.constant");
 const utils_1 = require("../../schemas/utils");
 const common_exceptions_1 = require("../../common/utils/common.exceptions");
+const mailer_1 = require("../../common/mailer/mailer");
 const user_loaders_1 = require("../../loaders/user.loaders");
 class UserRepository {
     constructor() {
@@ -158,6 +159,69 @@ class UserRepository {
     me(_id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this._loader.userById(_id);
+        });
+    }
+    oauthGoogle(profile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const googleUser = yield user_1.User.findOne({ google_id: profile.id });
+                if (googleUser) {
+                    mailer_1.sendMail(profile.emails[0].value, profile.displayName, `Welcome back ${profile.displayName} - Zujo`, 'login');
+                    return yield this.generateAndSaveToken(googleUser);
+                }
+                else {
+                    let user = new user_1.User({
+                        google_id: profile.id,
+                        email: profile.emails[0].value,
+                        profile: {
+                            name: profile.displayName,
+                            picture: profile._json.picture
+                        }
+                    });
+                    mailer_1.sendMail(profile.emails[0].value, profile.displayName, `Warm Welcome ${profile.displayName} - Zujo`, 'signup');
+                    return yield this.generateAndSaveToken(user);
+                }
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
+    oauthFacebook(profile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fbUser = yield user_1.User.findOne({ facebook_id: profile.id });
+                if (fbUser)
+                    return yield this.generateAndSaveToken(fbUser);
+                else {
+                    let user = new user_1.User({
+                        facebook_id: profile.id,
+                        email: profile.emails[0].value,
+                        profile: {
+                            name: profile.displayName
+                        }
+                    });
+                    return yield this.generateAndSaveToken(user);
+                }
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
+    generateAndSaveToken(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = yield common_jwt_1.JWT.generateToken(user._id.toHexString());
+            const AuthToken = {
+                kind: common_constant_1.USER_TOKEN_KIND.session,
+                accessToken: token
+            };
+            user.tokens.push(AuthToken);
+            const savedUser = yield user.save();
+            return {
+                authToken: AuthToken,
+                user: savedUser.toJSON()
+            };
         });
     }
 }

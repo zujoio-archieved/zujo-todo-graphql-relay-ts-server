@@ -13,14 +13,18 @@ const todo_1 = require("./repository/todo");
 const common_jwt_1 = require("./common/utils/common.jwt");
 const user_loaders_1 = require("./loaders/user.loaders");
 class Context {
-    constructor(request) {
+    constructor(request, response) {
         this._userRepository = new user_1.UserRepository();
         this._todoRepository = new todo_1.TodoRepository();
         this._userLoader = new user_loaders_1.UserLoader();
         this._request = request;
+        this._response = response;
     }
     get request() {
         return this._request;
+    }
+    get response() {
+        return this._response;
     }
     get userRepository() {
         return this._userRepository;

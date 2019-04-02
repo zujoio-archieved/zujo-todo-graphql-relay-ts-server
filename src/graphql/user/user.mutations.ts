@@ -6,6 +6,11 @@ import {
 import { GraphQLNonNull, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
 import { GraphQLUser } from './user.typedef';
 import { UserRepository } from '../../repository/user/index';
+import { tokenize } from 'protobufjs';
+import passport from 'passport';
+import { validateMiddleware } from 'graphql-middleware/dist/validation';
+import {sendMail} from '../../common/mailer/mailer';
+import '../../common/utils/passport';
 
 
 const GraphQLRegisterUserMutations = mutationWithClientMutationId({
@@ -37,6 +42,7 @@ const GraphQLRegisterUserMutations = mutationWithClientMutationId({
         }
         try {
             const { user, authToken} = await userRepo.register(userInput);
+            sendMail(email, email, `Warm welcome ${email} - Zujo`, 'signup')
             return { 
                 user,
                 token: authToken.accessToken
@@ -71,6 +77,7 @@ const GraphQLLoginUserMutation = mutationWithClientMutationId({
         const userRepo = new UserRepository();
         try {
             const { user, authToken} = await userRepo.login(email, password);
+            sendMail(email, email, `Welcome back ${email} - Zujo`, 'login')
             return { 
                 user,
                 token: authToken.accessToken

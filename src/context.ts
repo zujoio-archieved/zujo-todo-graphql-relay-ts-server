@@ -6,17 +6,22 @@ import { UserLoader } from "./loaders/user.loaders";
 
 class Context{
     private _request: Request
+    private _response: Response
     private _userRepository: UserRepository = new UserRepository()
     private _todoRepository: TodoRepository = new TodoRepository()
 
     private _userLoader: UserLoader = new UserLoader()
 
-    constructor(request: Request){
+    constructor(request: Request, response: Response){
         this._request = request;
+        this._response = response;
     }
 
     get request(): Request{
         return this._request
+    }
+    get response(): Response{
+        return this._response
     }
     get userRepository(): UserRepository{
         return this._userRepository;

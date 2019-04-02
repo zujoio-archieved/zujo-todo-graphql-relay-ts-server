@@ -3,8 +3,10 @@ import compression from "compression";  // compresses requests
 import session from "express-session";
 import expressValidator from "express-validator";
 import flash from "express-flash";
+import cors from 'cors';
 import path from "path";
 import { Request, Response } from "express";
+import passport from 'passport';
 
 import bodyParser from "body-parser";
 import lusca from "lusca";
@@ -21,11 +23,13 @@ import { authentication } from './common/utils/common.middlewares'
 import { JWT } from './common/utils/common.jwt'
 import { Context } from "./context";
 
+import './common/utils/passport';
+
 /**
  * Initialize express server
  */
 // context
-const context = async (req) => (new Context(req.request));
+const context = async (req, res) => (new Context(req.request, res));
 const yogaServer = new GraphQLServer({ 
   schema:schema, 
   context: context,
@@ -64,6 +68,7 @@ app.set("view engine", "pug");
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -94,6 +99,16 @@ app.get("/index", (req: Request, res: Response) => {
   });
 });
 
+app.post('/auth/google', passport.authenticate('google-token',{ session: false, prompt: 'consent', scope: ['profile', 'email'] }), 
+  (req: Request, res: Response) => {
+    console.log(req.user);
+    res.json(req.user);
+});
+
+app.post('/auth/facebook', passport.authenticate('facebook-token', {session: false}), 
+  (req: Request, res: Response) => {
+    res.json(req.user);
+  }
+);
 
 export { app, yogaServer }
-

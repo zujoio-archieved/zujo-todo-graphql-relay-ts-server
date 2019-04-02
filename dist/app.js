@@ -16,7 +16,9 @@ const compression_1 = __importDefault(require("compression")); // compresses req
 const express_session_1 = __importDefault(require("express-session"));
 const express_validator_1 = __importDefault(require("express-validator"));
 const express_flash_1 = __importDefault(require("express-flash"));
+const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
+const passport_1 = __importDefault(require("passport"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const lusca_1 = __importDefault(require("lusca"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -27,11 +29,12 @@ const graphql_yoga_1 = require("graphql-yoga");
 const schema_1 = require("./graphql/schema");
 const common_middlewares_1 = require("./common/utils/common.middlewares");
 const context_1 = require("./context");
+require("./common/utils/passport");
 /**
  * Initialize express server
  */
 // context
-const context = (req) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request)); });
+const context = (req, res) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request, res)); });
 const yogaServer = new graphql_yoga_1.GraphQLServer({
     schema: schema_1.schema,
     context: context,
@@ -66,6 +69,7 @@ app.set("view engine", "pug");
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(cors_1.default());
 app.use(express_validator_1.default());
 app.use(express_session_1.default({
     resave: true,
@@ -90,5 +94,12 @@ app.get("/index", (req, res) => {
     res.render("index", {
         title: "Home"
     });
+});
+app.post('/auth/google', passport_1.default.authenticate('google-token', { session: false, prompt: 'consent', scope: ['profile', 'email'] }), (req, res) => {
+    console.log(req.user);
+    res.json(req.user);
+});
+app.post('/auth/facebook', passport_1.default.authenticate('facebook-token', { session: false }), (req, res) => {
+    res.json(req.user);
 });
 //# sourceMappingURL=app.js.map

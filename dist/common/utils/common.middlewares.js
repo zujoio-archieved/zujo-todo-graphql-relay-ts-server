@@ -11,6 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_jwt_1 = require("./common.jwt");
 const common_exceptions_1 = require("./common.exceptions");
 const authentication = (resolve, root, args, context, info) => __awaiter(this, void 0, void 0, function* () {
+    // console.log("root", root)
+    // console.log("args", args)
+    // console.log("authentication middleware", context.req.body)
     const token = (context
         && context.req
         && context.req.headers
