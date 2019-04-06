@@ -7,7 +7,7 @@ import { User } from "../../schemas/user"
 import { USER_TOKEN_KIND } from "../../common/utils/common.constant"
 import { convertToObjectId } from "../../schemas/utils"
 import { EmailAlreadyExists } from '../../common/utils/common.exceptions'
-import { UserLoader } from "../../ loaders/ user.loaders";
+import { UserLoader } from "../../loaders/user.loaders";
 
 class UserRepository{
     private _loader:UserLoader = new UserLoader()

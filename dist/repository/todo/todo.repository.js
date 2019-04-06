@@ -16,12 +16,12 @@ const path_1 = require("path");
 const fs_1 = require("fs");
 const index_1 = require("../../schemas/todo/index");
 const common_mongoose_1 = require("../../common/utils/common.mongoose");
-const _todo_loaders_1 = require("../../ loaders/ todo.loaders");
+const todo_loaders_1 = require("../../loaders/todo.loaders");
 const fs = require('fs');
 const imagepath = path_1.join(__dirname, `../../../Upload/`);
 class TodoRepository {
     constructor() {
-        this._loader = new _todo_loaders_1.TodoLoader();
+        this._loader = new todo_loaders_1.TodoLoader();
     }
     /**
      * Fetch todo(s)

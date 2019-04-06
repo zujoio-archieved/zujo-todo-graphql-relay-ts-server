@@ -2,7 +2,7 @@ import { Request } from "express";
 import { UserRepository } from './repository/user';
 import { TodoRepository } from './repository/todo';
 import { JWT } from './common/utils/common.jwt'
-import { UserLoader } from "./ loaders/ user.loaders";
+import { UserLoader } from "./loaders/user.loaders";
 
 class Context{
     private _request: Request

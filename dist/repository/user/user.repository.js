@@ -19,10 +19,10 @@ const user_1 = require("../../schemas/user");
 const common_constant_1 = require("../../common/utils/common.constant");
 const utils_1 = require("../../schemas/utils");
 const common_exceptions_1 = require("../../common/utils/common.exceptions");
-const _user_loaders_1 = require("../../ loaders/ user.loaders");
+const user_loaders_1 = require("../../loaders/user.loaders");
 class UserRepository {
     constructor() {
-        this._loader = new _user_loaders_1.UserLoader();
+        this._loader = new user_loaders_1.UserLoader();
     }
     /**
      * Login user with credentials
