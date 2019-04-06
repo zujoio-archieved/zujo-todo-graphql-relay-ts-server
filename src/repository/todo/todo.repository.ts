@@ -5,7 +5,7 @@ import { join } from 'path';
 import { createWriteStream } from 'fs';
 import { ToDo } from "../../schemas/todo/index"
 import { getPaginatedRecords } from '../../common/utils/common.mongoose'
-import { TodoLoader } from "../../loaders/todo.loaders";
+import { TodoLoader } from "../../ loaders/ todo.loaders";
 const fs = require('fs');
 const imagepath = join(__dirname, `../../../Upload/`);
 
