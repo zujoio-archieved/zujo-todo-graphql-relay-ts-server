@@ -27,12 +27,12 @@ const cors_1 = __importDefault(require("cors"));
 const graphql_yoga_1 = require("graphql-yoga");
 const schema_1 = require("./graphql/schema");
 const common_middlewares_1 = require("./common/utils/common.middlewares");
-const _context_1 = require("./ context");
+const context_1 = require("./context");
 /**
  * Initialize express server
  */
 // context
-const context = (req) => __awaiter(this, void 0, void 0, function* () { return (new _context_1.Context(req.request)); });
+const context = (req) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request)); });
 const yogaServer = new graphql_yoga_1.GraphQLServer({
     schema: schema_1.schema,
     context: context,

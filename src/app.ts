@@ -15,7 +15,7 @@ import cors from 'cors'
 import { GraphQLServer } from "graphql-yoga"
 import { schema } from "./graphql/schema"
 import { authentication } from './common/utils/common.middlewares'
-import { Context } from "./ context";
+import { Context } from "./context";
 
 /**
  * Initialize express server
