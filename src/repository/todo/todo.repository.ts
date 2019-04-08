@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import DataLoader from 'dataloader'
 import { join } from 'path';
 import { createWriteStream } from 'fs';
-const imagepath = join(__dirname, `../../../Upload/`);
+const imagepath = join(__dirname, `../../../Assets/Upload/`);
 
 import { ToDo } from "../../schemas/todo/index"
 import { getPaginatedRecords } from '../../common/utils/common.mongoose'
@@ -127,15 +127,21 @@ export class TodoRepository{
         }
         return await ToDo.updateOne(where, payload)
     }
+    public async storeUpload(stream:any,filename:string){
+        stream
+        .pipe(createWriteStream(imagepath+filename))
+        .on("finish", () => console.log("finish"))
+        .on("error", ()=>console.log("error with moving file"))
+    }
 
   
 }
 
-export const storeUpload = (stream:any,filename:string) =>
-new Promise((resolve, reject) =>
-  stream
-    .pipe(createWriteStream(imagepath+filename))
-    .on("finish", () => resolve())
-    .on("error", reject)
-);
+// export const storeUpload = (stream:any,filename:string) =>
+// new Promise((resolve, reject) =>
+//   stream
+//     .pipe(createWriteStream(imagepath+filename))
+//     .on("finish", () => resolve())
+//     .on("error", reject)
+// );
 

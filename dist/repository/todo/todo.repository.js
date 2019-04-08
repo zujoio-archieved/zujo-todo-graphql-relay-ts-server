@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
 const path_1 = require("path");
 const fs_1 = require("fs");
-const imagepath = path_1.join(__dirname, `../../../Upload/`);
+const imagepath = path_1.join(__dirname, `../../../Assets/Upload/`);
 const index_1 = require("../../schemas/todo/index");
 const common_mongoose_1 = require("../../common/utils/common.mongoose");
 const todo_loaders_1 = require("../../loaders/todo.loaders");
@@ -141,10 +141,21 @@ class TodoRepository {
             return yield index_1.ToDo.updateOne(where, payload);
         });
     }
+    storeUpload(stream, filename) {
+        return __awaiter(this, void 0, void 0, function* () {
+            stream
+                .pipe(fs_1.createWriteStream(imagepath + filename))
+                .on("finish", () => console.log("finish"))
+                .on("error", () => console.log("error with moving file"));
+        });
+    }
 }
 exports.TodoRepository = TodoRepository;
-exports.storeUpload = (stream, filename) => new Promise((resolve, reject) => stream
-    .pipe(fs_1.createWriteStream(imagepath + filename))
-    .on("finish", () => resolve())
-    .on("error", reject));
+// export const storeUpload = (stream:any,filename:string) =>
+// new Promise((resolve, reject) =>
+//   stream
+//     .pipe(createWriteStream(imagepath+filename))
+//     .on("finish", () => resolve())
+//     .on("error", reject)
+// );
 //# sourceMappingURL=todo.repository.js.map

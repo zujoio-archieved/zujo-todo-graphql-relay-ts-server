@@ -86,6 +86,7 @@ app.use(lusca_1.default.xssProtection(true));
  * Configure static
  */
 app.use(express_1.default.static(path_1.default.join(__dirname, "public"), { maxAge: 31557600000 }));
+app.use(express_1.default.static(path_1.default.join(__dirname, '../Assets/Upload')));
 /**
  * Configure other routes
  */

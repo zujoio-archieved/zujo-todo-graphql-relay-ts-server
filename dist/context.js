@@ -41,6 +41,12 @@ class Context {
             return common_jwt_1.JWT.extractUserIdfromReq(this._request);
         });
     }
+    getFormData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let formData = this._request.body;
+            return formData;
+        });
+    }
 }
 exports.Context = Context;
 //# sourceMappingURL=context.js.map

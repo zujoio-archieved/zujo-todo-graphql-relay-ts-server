@@ -23,7 +23,7 @@ const common_graphql_1 = require("../../common/utils/common.graphql");
 const publisher_1 = __importDefault(require("../publisher"));
 const common_constant_1 = require("../../common/utils/common.constant");
 const todo_typedef_3 = require("./todo.typedef");
-const todo_repository_1 = require("../../repository/todo/todo.repository");
+// import{storeUpload} from '../../repository/todo/todo.repository'
 const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
     name: 'addTodo',
     inputFields: {
@@ -47,12 +47,12 @@ const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
         }
     },
     mutateAndGetPayload: ({ text }, context) => __awaiter(this, void 0, void 0, function* () {
+        const todoRepo = new todo_1.TodoRepository();
         const formData = yield context.getFormData();
         const MyFile = formData.variables.file;
         const { stream, filename } = yield MyFile;
         const fileenc = uuid_1.default(filename);
-        todo_repository_1.storeUpload(stream, fileenc);
-        const todoRepo = new todo_1.TodoRepository();
+        todoRepo.storeUpload(stream, fileenc);
         const createdTodo = yield todoRepo.addTodo(text, fileenc);
         // Generate cursor
         const cursor = common_graphql_1.objectIdToCursor(createdTodo["_id"].toHexString());

@@ -1,7 +1,7 @@
 import {
-    mutationWithClientMutationId,
-    fromGlobalId,
-    toGlobalId
+  mutationWithClientMutationId,
+  fromGlobalId,
+  toGlobalId
 } from 'graphql-relay'
 import { GraphQLNonNull, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
 import uuid from 'uuid'
@@ -14,7 +14,10 @@ import { objectIdToCursor } from '../../common/utils/common.graphql'
 import pubSub from '../publisher'
 import { TODO_SUBSCRIPTION_TRIGGERS } from '../../common/utils/common.constant'
 import { UploadType } from './todo.typedef';
-import{storeUpload} from '../../repository/todo/todo.repository'
+
+
+
+// import{storeUpload} from '../../repository/todo/todo.repository'
 const GraphQlAddTodoMutation = mutationWithClientMutationId({
     name: 'addTodo',
     inputFields: {
@@ -40,13 +43,14 @@ const GraphQlAddTodoMutation = mutationWithClientMutationId({
         }
     },
     mutateAndGetPayload: async ({ text },context) => {
+    
+       const todoRepo = new TodoRepository()
        const formData = await context.getFormData()
        const MyFile = formData.variables.file
        const {  stream,filename } = await MyFile
       const fileenc = uuid(filename);
-        storeUpload(stream,fileenc)
-        const todoRepo = new TodoRepository()
-        const createdTodo = await todoRepo.addTodo(text,fileenc);
+      todoRepo.storeUpload(stream,fileenc)
+       const createdTodo = await todoRepo.addTodo(text,fileenc);
     
 
         // Generate cursor

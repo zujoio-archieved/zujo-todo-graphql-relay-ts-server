@@ -48,5 +48,5 @@ const authentication = async (resolve, root, args, context, info) => {
       if (error.status && error.expose) response.status(error.status)
       next(error)
     })
-}
-export { authentication,graphqlUploadExpress }
+ }
+ export { authentication,graphqlUploadExpress }

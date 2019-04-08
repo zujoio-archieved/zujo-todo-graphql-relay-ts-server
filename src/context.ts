@@ -38,6 +38,12 @@ class Context{
     public async userId(): Promise<string>{
         return JWT.extractUserIdfromReq(this._request)
     }
+    public async getFormData(): Promise<any>{
+        let formData = this._request.body
+
+        return formData
+    }
+
 }
 
 export { Context }
