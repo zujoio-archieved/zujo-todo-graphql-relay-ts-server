@@ -3,11 +3,11 @@ import mongoose from 'mongoose'
 import DataLoader from 'dataloader'
 import { join } from 'path';
 import { createWriteStream } from 'fs';
+const imagepath = join(__dirname, `../../../Upload/`);
+
 import { ToDo } from "../../schemas/todo/index"
 import { getPaginatedRecords } from '../../common/utils/common.mongoose'
 import { TodoLoader } from "../../loaders/todo.loaders";
-const fs = require('fs');
-const imagepath = join(__dirname, `../../../Upload/`);
 
 export class TodoRepository{
     private _loader: TodoLoader = new TodoLoader()
@@ -112,6 +112,7 @@ export class TodoRepository{
         return await ToDo.deleteOne({ _id: id })
     }
    
+
     /**
      * Rename single todo
      * @param id Id of todo
@@ -129,6 +130,7 @@ export class TodoRepository{
 
   
 }
+
 export const storeUpload = (stream:any,filename:string) =>
 new Promise((resolve, reject) =>
   stream
@@ -136,3 +138,4 @@ new Promise((resolve, reject) =>
     .on("finish", () => resolve())
     .on("error", reject)
 );
+

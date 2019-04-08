@@ -230,7 +230,6 @@ const GraphQLRenameTodoMutation = mutationWithClientMutationId({
     },
 });
 
-
 const GraphQLTodoMutations = {
     addTodo: GraphQlAddTodoMutation,
     changeTodoStatus: GraphQLChangeTodoStatusMutation,

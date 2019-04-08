@@ -25,6 +25,7 @@ const connect_mongo_1 = __importDefault(require("connect-mongo"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const graphql_yoga_1 = require("graphql-yoga");
+const passport_1 = __importDefault(require("passport"));
 const schema_1 = require("./graphql/schema");
 const common_middlewares_1 = require("./common/utils/common.middlewares");
 const context_1 = require("./context");
@@ -32,11 +33,11 @@ const context_1 = require("./context");
  * Initialize express server
  */
 // context
-const context = (req) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request)); });
+const context = (req, res) => __awaiter(this, void 0, void 0, function* () { return (new context_1.Context(req.request, res)); });
 const yogaServer = new graphql_yoga_1.GraphQLServer({
     schema: schema_1.schema,
     context: context,
-    middlewares: [common_middlewares_1.authentication],
+    middlewares: [common_middlewares_1.authentication]
 });
 exports.yogaServer = yogaServer;
 const app = yogaServer.express;
@@ -64,11 +65,10 @@ mongoose_1.default.connect(mongoUrl).then(() => { }).catch(err => {
 app.set("port", process.env.PORT || 3000);
 app.set("views", path_1.default.join(__dirname, "../views"));
 app.set("view engine", "pug");
-app.use(cors_1.default());
-// app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
 app.use(compression_1.default());
-app.use(body_parser_1.default.json({ limit: '50mb' }));
+app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(cors_1.default());
 app.use(express_validator_1.default());
 app.use(express_session_1.default({
     resave: true,
@@ -85,7 +85,7 @@ app.use(lusca_1.default.xssProtection(true));
 /**
  * Configure static
  */
-app.use(express_1.default.static(path_1.default.join(__dirname, '../Upload')));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public"), { maxAge: 31557600000 }));
 /**
  * Configure other routes
  */
@@ -93,5 +93,12 @@ app.get("/index", (req, res) => {
     res.render("index", {
         title: "Home"
     });
+});
+app.post('/auth/google', passport_1.default.authenticate('google-token', { session: false, prompt: 'consent', scope: ['profile', 'email'] }), (req, res) => {
+    console.log(req.user);
+    res.json(req.user);
+});
+app.post('/auth/facebook', passport_1.default.authenticate('facebook-token', { session: false }), (req, res) => {
+    res.json(req.user);
 });
 //# sourceMappingURL=app.js.map

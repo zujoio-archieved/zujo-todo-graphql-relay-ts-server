@@ -6,8 +6,7 @@ import mongoose from "mongoose"
 export interface ITodo{
     id: string,
     complete: boolean,
-    text: string,
-    attachmentpath:string
+    text: string
 }
 
 /**

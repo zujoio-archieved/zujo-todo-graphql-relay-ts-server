@@ -13,6 +13,9 @@ import mongo from "connect-mongo";
 import mongoose from "mongoose";
 import cors from 'cors'
 import { GraphQLServer } from "graphql-yoga"
+import passport from 'passport'
+
+
 import { schema } from "./graphql/schema"
 import { authentication } from './common/utils/common.middlewares'
 import { Context } from "./context";
@@ -21,14 +24,14 @@ import { Context } from "./context";
  * Initialize express server
  */
 // context
-
-const context = async (req) => (new Context(req.request));
+const context = async (req, res) => (new Context(req.request, res));
 const yogaServer = new GraphQLServer({ 
   schema:schema, 
   context: context,
-  middlewares:[authentication],
+  middlewares:[authentication]
 })
 const app = yogaServer.express
+
 /**
  * Configure mongo store
  */
@@ -56,15 +59,11 @@ mongoose.connect(mongoUrl).then(
  */
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../views"));
-
 app.set("view engine", "pug");
-app.use(cors())
-
-// app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
 app.use(compression());
-
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -75,7 +74,6 @@ app.use(session({
     autoReconnect: true
   })
 }));
-
 app.use(flash());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
@@ -83,8 +81,10 @@ app.use(lusca.xssProtection(true));
 /**
  * Configure static 
  */
+app.use(
+    express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
+);
 
-app.use(express.static(path.join(__dirname, '../Upload')))
 /**
  * Configure other routes
  */
@@ -94,9 +94,16 @@ app.get("/index", (req: Request, res: Response) => {
   });
 });
 
+app.post('/auth/google', passport.authenticate('google-token',{ session: false, prompt: 'consent', scope: ['profile', 'email'] }), 
+  (req: Request, res: Response) => {
+    console.log(req.user);
+    res.json(req.user);
+});
 
-
-
+app.post('/auth/facebook', passport.authenticate('facebook-token', {session: false}), 
+  (req: Request, res: Response) => {
+    res.json(req.user);
+  }
+);
 
 export { app, yogaServer }
-

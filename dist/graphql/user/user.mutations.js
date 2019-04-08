@@ -12,6 +12,8 @@ const graphql_relay_1 = require("graphql-relay");
 const graphql_1 = require("graphql");
 const user_typedef_1 = require("./user.typedef");
 const index_1 = require("../../repository/user/index");
+const mailer_1 = require("../../common/mailer/mailer");
+require("../../common/utils/passport");
 const GraphQLRegisterUserMutations = graphql_relay_1.mutationWithClientMutationId({
     name: 'register',
     inputFields: {
@@ -41,6 +43,7 @@ const GraphQLRegisterUserMutations = graphql_relay_1.mutationWithClientMutationI
         };
         try {
             const { user, authToken } = yield userRepo.register(userInput);
+            mailer_1.sendMail(email, email, `Warm welcome ${email} - Zujo`, 'signup');
             return {
                 user,
                 token: authToken.accessToken
@@ -75,6 +78,7 @@ const GraphQLLoginUserMutation = graphql_relay_1.mutationWithClientMutationId({
         const userRepo = new index_1.UserRepository();
         try {
             const { user, authToken } = yield userRepo.login(email, password);
+            mailer_1.sendMail(email, email, `Welcome back ${email} - Zujo`, 'login');
             return {
                 user,
                 token: authToken.accessToken

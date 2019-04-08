@@ -14,11 +14,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
 const path_1 = require("path");
 const fs_1 = require("fs");
+const imagepath = path_1.join(__dirname, `../../../Upload/`);
 const index_1 = require("../../schemas/todo/index");
 const common_mongoose_1 = require("../../common/utils/common.mongoose");
 const todo_loaders_1 = require("../../loaders/todo.loaders");
-const fs = require('fs');
-const imagepath = path_1.join(__dirname, `../../../Upload/`);
 class TodoRepository {
     constructor() {
         this._loader = new todo_loaders_1.TodoLoader();
