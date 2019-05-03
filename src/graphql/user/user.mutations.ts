@@ -6,9 +6,6 @@ import {
 import { GraphQLNonNull, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
 import { GraphQLUser } from './user.typedef';
 import { UserRepository } from '../../repository/user/index';
-import { tokenize } from 'protobufjs';
-import passport from 'passport';
-import { validateMiddleware } from 'graphql-middleware/dist/validation';
 import {sendMail} from '../../common/mailer/mailer';
 import '../../common/utils/passport';
 

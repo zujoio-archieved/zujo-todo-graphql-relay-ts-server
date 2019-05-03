@@ -16,7 +16,15 @@ class InvalidToken extends Error{
     'Invalid token!'
 }
 
+class Authorization extends Error{
+  code = 1002
+  message = this.message || 
+    'Authorization required!'
+}
+
+
 export { 
   EmailAlreadyExists,
-  InvalidToken
+  InvalidToken,
+  Authorization
  }
