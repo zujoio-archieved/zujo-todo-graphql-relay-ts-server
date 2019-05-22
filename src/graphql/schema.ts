@@ -2,6 +2,7 @@ import { GraphQLSchema, GraphQLObjectType } from "graphql";
 
 import {  GraphQLUserMutations, GraphQLUserQueries } from "./user"
 import { GraphQLTodoMutations, GraphQLTodoSubscription } from "./todo"
+import {GraphQLPostMutations,GraphQLPostSubscription} from './post'
 
 /**
  * Root queries 
@@ -21,6 +22,7 @@ const RootMutation = new GraphQLObjectType({
     fields:{ 
         ...GraphQLUserMutations,
         ...GraphQLTodoMutations,
+        ...GraphQLPostMutations,
      
     }
 });
@@ -31,7 +33,8 @@ const RootMutation = new GraphQLObjectType({
 const RootSubscription = new GraphQLObjectType({
     name: "Subscription",
     fields:{
-        ...GraphQLTodoSubscription
+        ...GraphQLTodoSubscription,
+        ...GraphQLPostSubscription
     }
 });
 

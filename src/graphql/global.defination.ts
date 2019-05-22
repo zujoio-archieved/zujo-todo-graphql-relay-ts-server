@@ -8,6 +8,8 @@ import { UserRepository } from "../repository/user/index"
 import { User } from "../schemas/user"
 import { ToDo } from "../schemas/todo"
 import { TodoRepository } from "../repository/todo";
+import { Post } from "../schemas/post"
+import { PostRepository } from "../repository/post";
 
 
 
@@ -29,6 +31,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
             const userRepo = new UserRepository()
             return userRepo.findOne(id);
         }
+        if (type === 'Post') {
+            const postRepo = new PostRepository()
+            return postRepo.getPost(id);
+        }
         return null;
     },
     async obj => {
@@ -39,6 +45,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
         if (obj instanceof User) {
             const types = await import("./user/user.typedef")
             return types.GraphQLUser;
+        }
+        if (obj instanceof Post) {
+            const types = await import("./post/post.typedef")
+            return types.GraphQLPost;
         }
         return null
     },
