@@ -45,13 +45,26 @@ const GraphQlAddTodoMutation = mutationWithClientMutationId({
     mutateAndGetPayload: async ({ text },context) => {
     
        const todoRepo = new TodoRepository()
-       const formData = await context.getFormData()
-       const MyFile = formData.variables.file
-       const {  stream,filename } = await MyFile
-      const fileenc = uuid(filename);
-      todoRepo.storeUpload(stream,fileenc)
+       var fileenc = undefined;
+       var MyFile = undefined;
+      //  console.log(context);
+      try {
+        
+        const formData = await context.getFormData()
+        MyFile = formData.variables.file 
+        const {  stream,filename } = await MyFile
+        fileenc = uuid(filename);
+        todoRepo.storeUpload(stream,fileenc)
+      }
+      catch{
+
+      }
+
+
+       
+       
        const createdTodo = await todoRepo.addTodo(text,fileenc);
-    
+       
 
         // Generate cursor
         const cursor = objectIdToCursor(createdTodo["_id"].toHexString())

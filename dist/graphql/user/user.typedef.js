@@ -24,6 +24,9 @@ const todo_typedef_1 = require("../todo/todo.typedef");
 const index_1 = require("../../repository/todo/index");
 const common_graphql_1 = require("../../common/utils/common.graphql");
 const index_2 = require("../../schemas/todo/index");
+const index_3 = require("../../schemas/post/index");
+const post_typedef_1 = require("../post/post.typedef");
+const index_4 = require("../../repository/post/index");
 const GraphQLUser = new graphql_1.GraphQLObjectType({
     name: 'User',
     fields: () => ({
@@ -43,6 +46,23 @@ const GraphQLUser = new graphql_1.GraphQLObjectType({
                 const todos = yield todoRepo.getTodos(status, args);
                 return yield common_graphql_1.mongooseConnectionFromArray(index_2.ToDo, todos, args);
             })
+        },
+        posts: {
+            type: post_typedef_1.PostsConnection,
+            args: Object.assign({}, graphql_relay_1.connectionArgs),
+            resolve: (obj, _b) => __awaiter(this, void 0, void 0, function* () {
+                var args = __rest(_b, []);
+                const postRepo = new index_4.PostRepository();
+                const posts = yield postRepo.getPosts(args);
+                return yield common_graphql_1.mongooseConnectionFromArray(index_3.Post, posts, args);
+            })
+        },
+        numPosts: {
+            type: graphql_1.GraphQLInt,
+            resolve: () => __awaiter(this, void 0, void 0, function* () {
+                const postRepo = new index_4.PostRepository();
+                return yield postRepo.getNumPosts();
+            }),
         },
         numTodos: {
             type: graphql_1.GraphQLInt,

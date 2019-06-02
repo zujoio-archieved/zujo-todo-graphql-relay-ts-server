@@ -26,6 +26,12 @@ const TODO_SUBSCRIPTION_TRIGGERS = {
     rename_todo: "RENAME_TODO"
 };
 exports.TODO_SUBSCRIPTION_TRIGGERS = TODO_SUBSCRIPTION_TRIGGERS;
+const POST_SUBSCRIPTION_TRIGGERS = {
+    post_created: "POST_CREATED",
+    remove_post: "REMOVE_POST",
+    rename_post: "RENAME_POST"
+};
+exports.POST_SUBSCRIPTION_TRIGGERS = POST_SUBSCRIPTION_TRIGGERS;
 const CURSOR_PREFIX = 'arrayconnection:';
 exports.CURSOR_PREFIX = CURSOR_PREFIX;
 //# sourceMappingURL=common.constant.js.map

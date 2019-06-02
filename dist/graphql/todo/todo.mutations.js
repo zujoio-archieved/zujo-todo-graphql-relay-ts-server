@@ -48,11 +48,18 @@ const GraphQlAddTodoMutation = graphql_relay_1.mutationWithClientMutationId({
     },
     mutateAndGetPayload: ({ text }, context) => __awaiter(this, void 0, void 0, function* () {
         const todoRepo = new todo_1.TodoRepository();
-        const formData = yield context.getFormData();
-        const MyFile = formData.variables.file;
-        const { stream, filename } = yield MyFile;
-        const fileenc = uuid_1.default(filename);
-        todoRepo.storeUpload(stream, fileenc);
+        var fileenc = undefined;
+        var MyFile = undefined;
+        //  console.log(context);
+        try {
+            const formData = yield context.getFormData();
+            MyFile = formData.variables.file;
+            const { stream, filename } = yield MyFile;
+            fileenc = uuid_1.default(filename);
+            todoRepo.storeUpload(stream, fileenc);
+        }
+        catch (_a) {
+        }
         const createdTodo = yield todoRepo.addTodo(text, fileenc);
         // Generate cursor
         const cursor = common_graphql_1.objectIdToCursor(createdTodo["_id"].toHexString());

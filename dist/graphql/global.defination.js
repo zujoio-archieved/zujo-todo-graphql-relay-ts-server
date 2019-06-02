@@ -20,6 +20,8 @@ const index_1 = require("../repository/user/index");
 const user_1 = require("../schemas/user");
 const todo_1 = require("../schemas/todo");
 const todo_2 = require("../repository/todo");
+const post_1 = require("../schemas/post");
+const post_2 = require("../repository/post");
 /**
  * Defination for
  */
@@ -37,6 +39,10 @@ const { nodeInterface, nodeField } = graphql_relay_1.nodeDefinitions((globalId) 
         const userRepo = new index_1.UserRepository();
         return userRepo.findOne(id);
     }
+    if (type === 'Post') {
+        const postRepo = new post_2.PostRepository();
+        return postRepo.getPost(id);
+    }
     return null;
 }), (obj) => __awaiter(this, void 0, void 0, function* () {
     if (obj instanceof todo_1.ToDo) {
@@ -46,6 +52,10 @@ const { nodeInterface, nodeField } = graphql_relay_1.nodeDefinitions((globalId) 
     if (obj instanceof user_1.User) {
         const types = yield Promise.resolve().then(() => __importStar(require("./user/user.typedef")));
         return types.GraphQLUser;
+    }
+    if (obj instanceof post_1.Post) {
+        const types = yield Promise.resolve().then(() => __importStar(require("./post/post.typedef")));
+        return types.GraphQLPost;
     }
     return null;
 }));

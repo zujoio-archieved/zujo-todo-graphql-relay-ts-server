@@ -23,6 +23,12 @@ const TODO_SUBSCRIPTION_TRIGGERS = {
     remove_todo:"REMOVE_TODO",
     rename_todo:"RENAME_TODO"
 }
+const POST_SUBSCRIPTION_TRIGGERS = {
+    post_created:"POST_CREATED",
+    remove_post:"REMOVE_POST",
+    rename_post:"RENAME_POST"
+}
+
 
 const CURSOR_PREFIX = 'arrayconnection:';
 
@@ -30,5 +36,6 @@ export {
     USER_TOKEN_KIND,
     USER_SUBSCRIPTION_TRIGGERS,
     TODO_SUBSCRIPTION_TRIGGERS,
-    CURSOR_PREFIX
+    CURSOR_PREFIX,
+    POST_SUBSCRIPTION_TRIGGERS
 }
