@@ -69,7 +69,7 @@
   "author": "arjun.kava",
   "license": "ISC",
   "devDependencies": {
-    "@types/async": "^2.4.1",
+    "@types/async": "^3.0.1",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/bluebird": "^3.5.26",
     "@types/body-parser": "^1.17.0",
